@@ -55,6 +55,20 @@ const userSchema = new mongoose.Schema({
   }
 });
 
+// Pre-save hook to hash password before saving the user
+userSchema.pre('save', async function(next) {
+    // Only hash the password if it has been modified/created
+    if (!this.isModified('password')) return next();
+  
+    this.password = await bcrypt.hash(this.password, 12);
+    next();
+});
+  
+// Instance method to check user provided password against hashed password
+userSchema.methods.correctPassword = async function(candidatePassword, userPassword) {
+    return await bcrypt.compare(candidatePassword, userPassword);
+};
+
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;

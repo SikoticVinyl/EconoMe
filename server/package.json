@@ -6,6 +6,10 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.1.1"
   },
+  "scripts": {
+    "seed": "node seeds/seedUser.js",
+    "start": "node server/app.js"
+  },
   "devDependencies": {
     "nodemon": "^3.0.3"
   }
