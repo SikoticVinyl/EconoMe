@@ -1,3 +1,2 @@
 # EconoMe
-
-Our Project 3 Project! README Coming Soon!
+A budgeting app to make budgetting more dynamic and user friendly
