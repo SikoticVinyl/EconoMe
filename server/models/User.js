@@ -20,27 +20,19 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     match: [/.+\@.+\..+/, 'Please provide a valid email address'],
     validate: {
-      validator: function(email) {
-        if (!this.isModified('email')) {
-          return true; // Skips validation if the email hasn't been modified/created
-        }
-        return new Promise((resolve, reject) => {
-          //'this.constructor' handles cases where the model might not be compiled yet (e.g., when called from 'userSchema.pre('save')')
-          this.constructor.findOne({ email: email.toLowerCase() }, (err, user) => {
-            if (err) {
-              reject(err);
-            }
-            if (user) {
-              resolve(false);
-            } else {
-              resolve(true);
-            }
+        validator: function(email) {
+          if (!this.isModified('email')) {
+            return true; // Skips validation if the email hasn't been modified/created
+          }
+          return new Promise((resolve, reject) => {
+            this.constructor.findOne({ email: email.toLowerCase() }).then(user => {
+              resolve(!user); // If user is found, resolve with false, otherwise true
+            }).catch(err => reject(err));
           });
-        });
-      },
-      message: 'Email already exists'
-    }
-  },
+        },
+        message: 'Email already exists'
+      }
+    },
   password: {
     type: String,
     required: [true, 'Please provide a password'],

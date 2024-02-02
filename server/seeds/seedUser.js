@@ -2,9 +2,9 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const User = require('../models/User');
 
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('MongoDB Connected'))
-  .catch(err => console.error('MongoDB Connection Error:', err));
+mongoose.connect('mongodb://127.0.0.1:27017/econome')
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('Error connecting to MongoDB:', err));
 
 // Development / example user
 const seedUser = new User({
