@@ -28,13 +28,13 @@ exports.signup = async (req, res) => {
 
 exports.login = async (req, res) => {
     try {
-      const { email, password } = req.body;
-      const user = await User.findOne({ email }).select('+password');
+      const { username, password } = req.body;
+      const user = await User.findOne({ username }).select('+password');
   
       if (!user || !(await user.correctPassword(password, user.password))) {
         return res.status(401).json({
           status: 'fail',
-          message: 'Incorrect email or password'
+          message: 'Incorrect username or password'
         });
       }
   
