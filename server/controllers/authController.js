@@ -25,3 +25,36 @@ exports.signup = async (req, res) => {
     });
   }
 };
+
+exports.login = async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      const user = await User.findOne({ email }).select('+password');
+  
+      if (!user || !(await user.correctPassword(password, user.password))) {
+        return res.status(401).json({
+          status: 'fail',
+          message: 'Incorrect email or password'
+        });
+      }
+  
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+      
+      // Remove password from output
+      user.password = undefined;
+  
+      res.status(200).json({
+        status: 'success',
+        token,
+        data: {
+          user
+        }
+      });
+    } catch (err) {
+      res.status(400).json({
+        status: 'fail',
+        message: err.message
+      });
+    }
+  };
+  
