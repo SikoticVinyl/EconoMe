@@ -13,14 +13,15 @@ mongoose.connect(process.env.MONGODB_URI)
 User.deleteMany({})
   .then(() => {
     console.log('Deleted all users');
-
-// Development / example user
-const seedUser = new User({
-  fullName: 'Econo Me',
-  username: 'devtest',
-  email: 'test@example.com',
-  password: 'Password123!'
-});
+    // Development / example user
+    const seedUser = new User({
+      fullName: 'Econo Me',
+      username: 'devtest',
+      email: 'test@example.com',
+      password: 'Password123!'
+    });
+    return seedUser.save();
+  })
 
 seedUser.save()
   .then(user => {
