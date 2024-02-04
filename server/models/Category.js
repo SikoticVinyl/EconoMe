@@ -1,3 +1,5 @@
+const { schema: transactionSchema } = require('./Transaction');
+
 const categorySchema = new mongoose.Schema({
     name: {
       type: String,
@@ -10,3 +12,7 @@ const categorySchema = new mongoose.Schema({
     transactions: [transactionSchema]
   });
   
+const Category = mongoose.model('Category', categorySchema);
+
+module.exports.Category = Category;
+module.exports.schema = categorySchema;
