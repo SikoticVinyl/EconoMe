@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: '../.env' });
 const express = require('express');
 const helmet = require('helmet'); //a middleware that adds various security headers to protect the app from some web vulnerabilities
 const cors = require('cors'); //(Cross-Origin Resource Sharing) to allow or restrict requested resources on a web server based on where the HTTP request was initiated
@@ -30,5 +30,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
-

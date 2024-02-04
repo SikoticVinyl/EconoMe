@@ -33,34 +33,28 @@ const userSchema = new mongoose.Schema({
         message: 'Email already exists'
       }
     },
-  password: {
-    type: String,
-    required: [true, 'Please provide a password'],
-    minlength: [6, 'Password must be at least 6 characters long'],
-    validate: {
-      validator: function(v) {
-        return /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{6,}$/.test(v);
-      },
-      message: `Not a strong password! Ensure it has a minimum of 6 characters, includes a number, a lowercase letter, an uppercase letter, and a special character.`
-    },
-    select: false // Prevents password from being returned in queries by default
-  }
+    password: {
+      type: String,
+      required: [true, 'Please provide a password'],
+      minlength: [6, 'Password must be at least 6 characters long'],
+      select: false // Prevents password from being returned in queries by default
+    }
 });
 
-// Pre-save hook to hash password before saving the user
 userSchema.pre('save', async function(next) {
-    // Only hash the password if it has been modified/created
-    if (!this.isModified('password')) return next();
-  
+  if (this.isModified('password')) {
+    const passwordRegex = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
+    if (!passwordRegex.test(this.password)) {
+      return next(new Error('Password does not meet complexity requirements.'));
+    }
     this.password = await bcrypt.hash(this.password, 12);
-    next();
+  }
+  next();
 });
-  
-// Instance method to check user provided password against hashed password
+
 userSchema.methods.correctPassword = async function(candidatePassword, userPassword) {
-    return await bcrypt.compare(candidatePassword, userPassword);
+  return await bcrypt.compare(candidatePassword, userPassword);
 };
 
 const User = mongoose.model('User', userSchema);
-
 module.exports = User;

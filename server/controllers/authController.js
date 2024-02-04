@@ -5,10 +5,9 @@ const bcrypt = require('bcryptjs');
 exports.signup = async (req, res) => {
   try {
     const { fullName, username, email, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 12);
-    const newUser = await User.create({ fullName, username, email, password: hashedPassword });
+    // Directly pass the plaintext password to User.create
+    const newUser = await User.create({ fullName, username, email, password });
 
-    // Createa token (omits sensitive information)
     const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
     res.status(201).json({
