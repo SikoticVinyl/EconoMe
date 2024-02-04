@@ -1,9 +1,7 @@
-require('dotenv').config();
+require('dotenv').config({ path: '../.env' });
 const mongoose = require('mongoose');
 const express = require('express');
 const authRoutes = require('./routes/authRoutes');
-
-console.log("Trying to connect to: ", process.env.MONGODB_URI);
 
 const app = express();
 app.use(express.json()); // Middleware for parsing JSON bodies

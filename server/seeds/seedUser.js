@@ -1,8 +1,6 @@
-require('dotenv').config();
+require('dotenv').config({ path: '../.env' });
 const mongoose = require('mongoose');
 const User = require('../models/User');
-
-console.log("Log of .env being pulled: ", process.env.MONGODB_URI)
 
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('Connected to MongoDB'))
@@ -20,10 +18,9 @@ User.deleteMany({})
       email: 'test@example.com',
       password: 'Password123!'
     });
+
     return seedUser.save();
   })
-
-seedUser.save()
   .then(user => {
     console.log('User created:', user);
     mongoose.disconnect();
