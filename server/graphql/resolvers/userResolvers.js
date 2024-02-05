@@ -2,6 +2,9 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { UserInputError, AuthenticationError } = require('apollo-server-express');
 const User = require('../../models/User');
+const Budget = require('../../models/Budget');
+const Category = require('../../models/Category');
+const Transaction = require('../../models/Transaction');
 
 const resolvers = {
   Mutation: {
@@ -43,13 +46,11 @@ const resolvers = {
       return { token, user };
     },
     updateUser: async (_, args, context) => {
-        // Assuming your authentication logic sets the user in the context
         if (!context.userId) throw new AuthenticationError('You must be logged in');
 
         const { id, fullName, username, email, password } = args;
         const updates = {};
 
-        // Ensure the user can only update their own profile, or implement additional authorization logic as needed
         if (context.userId !== id) throw new AuthenticationError('Unauthorized');
 
         if (fullName) updates.fullName = fullName;
@@ -64,6 +65,38 @@ const resolvers = {
         const updatedUser = await User.findByIdAndUpdate(id, updates, { new: true });
         return updatedUser;
     },
+    deleteUser: async (_, { id, confirm }, context) => {
+        // Check for user confirmation
+        if (!confirm) {
+          throw new UserInputError('Deletion must be confirmed');
+        }
+  
+        if (!context.user || context.user.id !== id) {
+          throw new AuthenticationError('Unauthorized or not logged in');
+        }
+  
+        try {
+          // Deleting all associated Transactions.
+          await Transaction.deleteMany({ user: id });
+  
+          // Delete all Categories associated with the user's Budgets.
+          const budgets = await Budget.find({ user: id });
+          const budgetIds = budgets.map((budget) => budget._id);
+          await Category.deleteMany({ budget: { $in: budgetIds } });
+  
+          // Delete all Budgets owned by the user
+          await Budget.deleteMany({ user: id });
+  
+          // Delete the User
+          const result = await User.findByIdAndDelete(id);
+  
+          console.log(`User ${id} and all associated data have been deleted.`);
+          return true;
+        } catch (error) {
+          // Handle errors,should setup for permission issues or user not found.
+          throw error;
+        }
+      },   
   },
 };
 

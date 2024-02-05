@@ -39,4 +39,3 @@ const Transaction = mongoose.model('Transaction', transactionSchema);
 
 module.exports.Transaction = Transaction;
 module.exports.schema = transactionSchema;
-6
