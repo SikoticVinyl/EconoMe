@@ -42,18 +42,17 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.pre('save', async function(next) {
-  if (this.isModified('password')) {
-    const passwordRegex = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
-    if (!passwordRegex.test(this.password)) {
-      return next(new Error('Password does not meet complexity requirements.'));
-    }
-    this.password = await bcrypt.hash(this.password, 12);
+  if (!this.isModified('password')) return next();
+  const passwordRegex = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
+  if (!passwordRegex.test(this.password)) {
+    return next(new Error('Password does not meet complexity requirements.'));
   }
+  this.password = await bcrypt.hash(this.password, 12);
   next();
 });
 
 userSchema.methods.correctPassword = async function(candidatePassword, userPassword) {
-  return await bcrypt.compare(candidatePassword, userPassword);
+  return bcrypt.compare(candidatePassword, userPassword);
 };
 
 const User = mongoose.model('User', userSchema);
