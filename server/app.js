@@ -1,32 +1,47 @@
-require('dotenv').config({ path: '../.env' });
 const express = require('express');
-const helmet = require('helmet'); //a middleware that adds various security headers to protect the app from some web vulnerabilities
-const cors = require('cors'); //(Cross-Origin Resource Sharing) to allow or restrict requested resources on a web server based on where the HTTP request was initiated
-const rateLimit = require('express-rate-limit'); // limit repeated requests to public APIs and/or endpoints
+const { ApolloServer } = require('apollo-server-express');
+const helmet = require('helmet');
+const cors = require('cors');
+const rateLimit = require('express-rate-limit');
 const mongoose = require('mongoose');
-const authRoutes = require('./routes/authRoutes'); //contains our authentication routes
 
-const app = express();
+// Import your GraphQL type definitions and resolvers
+const typeDefs = require('./graphql/schemas');
+const resolvers = require('./graphql/resolvers');
 
-app.use(helmet());
-app.use(cors());
-// Global rate limiting configuration
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
-  message: "Too many requests from this IP, please try again after 15 minutes",
-});
-app.use(limiter);
+async function startServer() {
+  const app = express();
+  app.use(helmet());
+  app.use(cors());
+  app.use(rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+  }));
+  app.use(express.json());
 
-app.use(express.json());
+  // Connect to MongoDB
+  mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('Connected to MongoDB'))
+    .catch(err => console.error('Error connecting to MongoDB:', err));
 
-app.use('/api/users', authRoutes);
+  // Create an instance of ApolloServer
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    // Add context if you need to share data or authentication state between resolvers
+    context: ({ req }) => ({ req }),
+  });
 
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('Error connecting to MongoDB:', err));
+  // Apply the Apollo GraphQL middleware and set the path to /graphql
+  await server.start();
+  server.applyMiddleware({ app, path: '/graphql' });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+  // Specify the port
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+    console.log(`GraphQL path is ${server.graphqlPath}`);
+  });
+}
+
+startServer();
