@@ -10,7 +10,7 @@ const transactionSchema = gql`
     payDate: String
     flexible: Boolean
     paid: Boolean
-    category: Category
+    category: Category!
   }
 
   extend type Query {
@@ -19,7 +19,27 @@ const transactionSchema = gql`
   }
 
   extend type Mutation {
-    createTransaction(name: String!, amount: Float!, transactionType: String!, dueDate: String, payDate: String, flexible: Boolean, paid: Boolean, categoryId: ID!): Transaction
+    createTransaction(
+      name: String!
+      amount: Float!
+      transactionType: String!
+      dueDate: String
+      payDate: String
+      flexible: Boolean!
+      paid: Boolean!
+      categoryId: ID!
+    ): Transaction
+    updateTransaction(
+      id: ID!
+      name: String
+      amount: Float
+      transactionType: String
+      dueDate: String
+      payDate: String
+      flexible: Boolean
+      paid: Boolean
+    ): Transaction
+    deleteTransaction(id: ID!): Transaction
   }
 `;
 
