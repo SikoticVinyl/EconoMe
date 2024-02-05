@@ -17,6 +17,8 @@ const categorySchema = gql`
 
   extend type Mutation {
     createCategory(name: String!, flexB: Boolean!, budgetId: ID!): Category
+    updateCategory(id: ID!, name: String, flexB: Boolean): Category
+
   }
 `;
 

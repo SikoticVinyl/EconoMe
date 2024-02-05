@@ -38,6 +38,7 @@ const transactionSchema = gql`
       flexible: Boolean
       paid: Boolean
     ): Transaction
+    moveTransaction(transactionId: ID!, newCategoryId: ID!): Transaction
     deleteTransaction(id: ID!): Transaction
   }
 `;
