@@ -33,7 +33,6 @@ const transactionSchema = gql`
       id: ID!
       name: String
       amount: Float
-      transactionType: String
       dueDate: String
       payDate: String
       flexible: Boolean
