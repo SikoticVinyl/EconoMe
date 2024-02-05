@@ -10,6 +10,10 @@ const categorySchema = new mongoose.Schema({
     type: Boolean,
     required: [true, 'Please specify if the category is for flexible budgeting'],
   },
+  linked: {
+    type: Boolean,
+    default: false,
+  },
   transactions: [transactionSchema],
   filter: {
     type: String,

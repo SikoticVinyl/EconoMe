@@ -8,6 +8,7 @@ const categorySchema = gql`
     transactions: [Transaction]
     filter: String!
     budget: Budget!
+    linked: Boolean
   }
 
   extend type Query {
@@ -20,21 +21,21 @@ const categorySchema = gql`
       name: String!
       flexB: Boolean!
       budgetId: ID!
-      ): Category
+    ): Category
     updateCategory(
       id: ID!
       name: String
       flexB: Boolean
-      ): Category
-      deleteCategory(
-        id: ID!
-        deleteTransactions: Boolean
-        deleteLinkedCategories: Boolean
-      ): Category
-      linkCategoryToBudget(
-        categoryId: ID!
-        budgetIds: [ID]
-      ): Category
+    ): Category
+    deleteCategory(
+      id: ID!
+      deleteTransactions: Boolean
+      deleteLinkedCategories: Boolean
+    ): Category
+    linkCategoryToBudget(
+      categoryId: ID!
+      budgetIds: [ID]
+    ): Category
   }
 `;
 
