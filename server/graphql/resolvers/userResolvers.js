@@ -42,6 +42,28 @@ const resolvers = {
 
       return { token, user };
     },
+    updateUser: async (_, args, context) => {
+        // Assuming your authentication logic sets the user in the context
+        if (!context.userId) throw new AuthenticationError('You must be logged in');
+
+        const { id, fullName, username, email, password } = args;
+        const updates = {};
+
+        // Ensure the user can only update their own profile, or implement additional authorization logic as needed
+        if (context.userId !== id) throw new AuthenticationError('Unauthorized');
+
+        if (fullName) updates.fullName = fullName;
+        if (username) updates.username = username;
+        if (email) updates.email = email;
+        if (password) {
+            const saltRounds = 10;
+            const hashedPassword = await bcrypt.hash(password, saltRounds);
+            updates.password = hashedPassword;
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(id, updates, { new: true });
+        return updatedUser;
+    },
   },
 };
 

@@ -15,8 +15,26 @@ const userSchema = gql`
   }
 
   extend type Mutation {
-    createUser(fullName: String!, username: String!, email: String!, password: String!): User
-    loginUser(username: String!, password: String!): AuthPayload
+    createUser(
+        fullName: String!
+        username: String!
+        email: String!
+        password: String!
+    ): User
+    loginUser(
+        username: String!
+        password: String!
+    ): AuthPayload
+    updateUser(
+        id: ID!
+        fullName: String
+        username: String
+        email: String
+        password: String
+    ): User
+    deleteUser(
+        id: ID!
+    ): Boolean
   }
 
   type AuthPayload {
