@@ -26,8 +26,15 @@ const categorySchema = gql`
       name: String
       flexB: Boolean
       ): Category
-    deleteCategory(id: ID!): Category
-
+      deleteCategory(
+        id: ID!
+        deleteTransactions: Boolean
+        deleteLinkedCategories: Boolean
+      ): Category
+      linkCategoryToBudget(
+        categoryId: ID!
+        budgetIds: [ID]
+      ): Category
   }
 `;
 
