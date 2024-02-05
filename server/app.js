@@ -5,10 +5,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const mongoose = require('mongoose');
-
-// Import your GraphQL type definitions and resolvers
-const typeDefs = require('./graphql/schemas');
-const resolvers = require('./graphql/resolvers');
+const schema = require('./graphql/schemas');
 
 async function startServer() {
   const app = express();
@@ -20,24 +17,18 @@ async function startServer() {
   }));
   app.use(express.json());
 
-  // Connect to MongoDB
   mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error('Error connecting to MongoDB:', err));
 
-  // Create an instance of ApolloServer
   const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-    // Add context if you need to share data or authentication state between resolvers
+    schema, 
     context: ({ req }) => ({ req }),
   });
 
-  // Apply the Apollo GraphQL middleware and set the path to /graphql
   await server.start();
   server.applyMiddleware({ app, path: '/graphql' });
 
-  // Specify the port
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
