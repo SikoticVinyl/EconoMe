@@ -5,9 +5,16 @@ import App from './App';
 
 // Set up Apollo Client
 const client = new ApolloClient({
-  uri: 'https://your-graphql-endpoint.com',
-  cache: new InMemoryCache()
+  uri: 'http://localhost:3001/graphql',
+  cache: new InMemoryCache(),
 });
+
+render(
+  <ApolloProvider client={client}>
+    <App />
+  </ApolloProvider>,
+  document.getElementById('root')
+);
 
 const root = document.getElementById('root');
 if (root !== null) {
