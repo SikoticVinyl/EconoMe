@@ -6,6 +6,8 @@ const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const mongoose = require('mongoose');
 const schema = require('./graphql/schemas');
+const jwt = require('jsonwebtoken');
+const User = require('./models/User');
 
 async function startServer() {
   const app = express();
@@ -24,8 +26,35 @@ async function startServer() {
 
 
   const server = new ApolloServer({
-    schema, 
-    context: ({ req }) => ({ req }),
+    schema,
+    context: async ({ req }) => {
+      // Initialize an empty context
+      const context = {
+        req,
+      };
+  
+      // Get the token from the Authorization header
+      const authHeader = req.headers.authorization || '';
+      const token = authHeader.split(' ')[1]; // Assumes "Bearer [token]"
+  
+      if (token) {
+        try {
+          // Verify the token
+          const decoded = jwt.verify(token, process.env.JWT_SECRET);
+          // Find the user based on the token's payload
+          const user = await User.findById(decoded.id);
+  
+          // Add the user to the context if found
+          if (user) {
+            context.user = user;
+          }
+        } catch (err) {
+          console.error('Authentication error:', err);
+        }
+      }
+  
+      return context;
+    },
   });
 
   await server.start();
