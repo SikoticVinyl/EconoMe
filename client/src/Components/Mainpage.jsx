@@ -2,7 +2,8 @@
 import { Link } from "react-router-dom";
 import reactLogo from "../assets/react.svg";
 import viteLogo from "/vite.svg";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
+import nightModeIcon from "../assets/nightmode-svgrepo-com.svg";
 
 function MainPage({ darkMode, toggleDarkMode }) {
   return (
@@ -15,15 +16,12 @@ function MainPage({ darkMode, toggleDarkMode }) {
           }}
           className="p-2 bg-gray-600 text-white rounded-full hover:bg-gray-700 focus:outline-none"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            className="h-6 w-6"
-          >
-            {/* Replace with your icon's SVG path */}
-          </svg>
+          <img
+            src={nightModeIcon}
+            alt="Toggle dark mode"
+            style={{ height: "24px", width: "24px" }}
+          />{" "}
+          {/* use your SVG as the button's icon */}
         </button>
       </div>
       <div>
@@ -32,12 +30,23 @@ function MainPage({ darkMode, toggleDarkMode }) {
         </a>
       </div>
       <h1>Pennywise</h1>
+
       <Link to="/homepage">
         <button>Lets get started</button>
       </Link>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+
+      <footer
+        style={{
+          position: "absolute",
+          bottom: 0,
+          width: "100%",
+          height: "2.5rem",
+          fontSize: "0.8rem",
+          textAlign: "center",
+        }}
+      >
+        &copy; {new Date().getFullYear()} JuiceHeads
+      </footer>
     </div>
   );
 }
