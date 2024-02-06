@@ -121,6 +121,28 @@ const resolvers = {
         throw error;
       }
     },
+    clearUsers: async () => {
+      try {
+        // 1. Delete all Transactions associated with users
+        //await Transaction.deleteMany({ user: { $exists: true } });
+    
+        // 2. Delete all Categories associated with users' Budgets
+        //await Category.deleteMany({ budget: { $exists: true } });
+    
+        // 3. Delete all Budgets owned by users
+        await Budget.deleteMany({ user: { $exists: true } });
+    
+        // 4. Delete all Users
+        await User.deleteMany({});
+    
+        console.log('All users and associated data have been cleared.');
+        
+        return true;
+      } catch (error) {
+        console.error('Error clearing users:', error);
+        return false;
+      }
+    },
   },
 };
 
