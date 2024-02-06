@@ -30,6 +30,10 @@ function MainPage({ darkMode, toggleDarkMode }) {
         </a>
       </div>
       <h1>Pennywise</h1>
+      <div>
+        {/* ... other elements ... */}
+        <Link to="/overviewpage">Go to Overview Page</Link>
+      </div>
 
       <Link to="/homepage">
         <button>Lets get started</button>
