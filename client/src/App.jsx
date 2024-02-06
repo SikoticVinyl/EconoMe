@@ -6,8 +6,7 @@ import Signup from "./Components/Signup";
 import MainPage from "./Components/Mainpage";
 import HomePage from "./Components/HomePage"; // import HomePage component
 import "./App.css";
-import overviewpage from "./Components/overviewpage";
-
+import OverviewPage from "./Components/OverviewPage"; // rename overviewpage to OverviewPage
 function App() {
   const [darkMode, setDarkMode] = useState(false);
   const toggleDarkMode = () => {
@@ -18,7 +17,6 @@ function App() {
       document.documentElement.classList.remove("dark");
     }
   };
-
   return (
     <Router>
       <Routes>
@@ -26,10 +24,23 @@ function App() {
         <Route path="/homepage" element={<HomePage />} /> {/* add this line */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/overviewpage" element={<overview />} />
+        <Route path="/overviewpage" element={<OverviewPage />} /> {/* render OverviewPage */}
       </Routes>
     </Router>
   );
 }
-
 export default App;
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,13 +1,11 @@
-import React from 'react'; 
+import React from 'react';
 import { Link } from 'react-router-dom';
-
-function overviewPage (){ 
-
+function OverviewPage() {
+  // Replace these with your actual data
   const incomeTotal = 1000;
   const expensesTotal = 500;
   const savingsGoals = 200;
   const profit = incomeTotal - expensesTotal;
-
   return (
     <div>
       <div>
@@ -27,3 +25,28 @@ function overviewPage (){
     </div>
   );
 }
+export default OverviewPage;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
