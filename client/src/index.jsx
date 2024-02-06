@@ -9,22 +9,12 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-render(
-  <ApolloProvider client={client}>
-    <App />
-  </ApolloProvider>,
+// Render the App component wrapped with ApolloProvider
+ReactDOM.render(
+  <React.StrictMode>
+    <ApolloProvider client={client}>
+      <App />
+    </ApolloProvider>
+  </React.StrictMode>,
   document.getElementById('root')
 );
-
-const root = document.getElementById('root');
-if (root !== null) {
-  const app = (
-    <React.StrictMode>
-      <ApolloProvider client={client}>
-        <App />
-      </ApolloProvider>
-    </React.StrictMode>
-  );
-
-  ReactDOM.createRoot(root).render(app);
-}
