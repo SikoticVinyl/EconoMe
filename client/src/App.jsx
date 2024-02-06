@@ -6,6 +6,7 @@ import Signup from "./Components/Signup";
 import MainPage from "./Components/Mainpage";
 import HomePage from "./Components/HomePage"; // import HomePage component
 import "./App.css";
+import overviewpage from "./Components/overviewpage";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -25,6 +26,7 @@ function App() {
         <Route path="/homepage" element={<HomePage />} /> {/* add this line */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/overviewpage" element={<overview />} />
       </Routes>
     </Router>
   );
