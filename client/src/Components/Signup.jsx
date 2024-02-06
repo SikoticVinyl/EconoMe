@@ -1,9 +1,9 @@
 import { useMutation, gql } from "@apollo/client";
 import { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 
 const SIGNUP_USER = gql
-  `mutation Signup($fullName: String!, $username: String!, $email: String!, $password: String!) {
+  `mutation createUser($fullName: String!, $username: String!, $email: String!, $password: String!) {
     createUser(fullName: $fullName, username: $username, email: $email, password: $password) {
       token
       user {
@@ -17,7 +17,7 @@ const SIGNUP_USER = gql
   ;
 
 function Signup() {
-  const history = useHistory();
+  // const history = useHistory();
 
   // State variables to capture input values
   const [fullName, setFullName] = useState('');
@@ -43,8 +43,8 @@ function Signup() {
       // Redirect to login page after successful signup
       history.push('/login');
     } catch (error) {
-      // Handle signup error
-      console.error(error);
+      console.error("GraphQL Error:", error.graphQLErrors);
+      console.error("Network Error:", error.networkError);
     }
   };
 
