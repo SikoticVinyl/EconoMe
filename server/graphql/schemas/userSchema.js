@@ -36,6 +36,7 @@ const userSchema = gql`
         id: ID!
         confirm: Boolean!
     ): Boolean
+    clearUsers: Boolean
   }
 
   type AuthPayload {
