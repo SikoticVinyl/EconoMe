@@ -18,3 +18,21 @@ exports.getTotalExpenses = async (userId) => {
   ]);
   return result[0] ? result[0].totalExpenses : 0;
 };
+
+// Total Savings
+exports.getTotalSavings = async (userId) => {
+  const result = await Transaction.aggregate([
+    { $match: { user: mongoose.Types.ObjectId(userId), transactionType: 'savings' } },
+    { $group: { _id: null, totalSavings: { $sum: "$amount" } } }
+  ]);
+  return result[0] ? result[0].totalSavings : 0;
+};
+
+// Total Flexible Expenses
+exports.getTotalFlexibleExpenses = async (userId) => {
+  const result = await Transaction.aggregate([
+    { $match: { user: mongoose.Types.ObjectId(userId), transactionType: 'expense', flexible: true } },
+    { $group: { _id: null, totalFlexible: { $sum: "$amount" } } }
+  ]);
+  return result[0] ? result[0].totalFlexible : 0;
+};
