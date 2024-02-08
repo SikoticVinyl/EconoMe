@@ -9,7 +9,7 @@ const Transaction = require('../../models/Transaction');
 const resolvers = {
   Mutation: {
     createUser: async (_, { fullName, username, email, password }) => {
-      console.log('Creating user:', { fullName, username, email, password });
+      console.log('Creating user:', { fullName, username, email}, 'Password hidden for security.');
   
       const newUser = new User({ fullName, username, email, password });
   
@@ -35,7 +35,7 @@ const resolvers = {
     },
 
     loginUser: async (_, { username, password }) => {
-      console.log('Logging in user:', { username, password });
+      console.log('Logging in user:', { username});
 
       const user = await User.findOne({ username }).select('+password');
 
@@ -53,7 +53,7 @@ const resolvers = {
         expiresIn: '1d',
       });
 
-      console.log('User logged in:', user);
+      console.log('User logged in:', username );
 
       return { token, user };
     },
@@ -92,7 +92,7 @@ const resolvers = {
         throw new UserInputError('Deletion must be confirmed');
       }
 
-      if (!context.user || context.user.id !== id) {
+      if (!context.user || context.user._id !== id) {
         throw new AuthenticationError('Unauthorized or not logged in');
       }
 
