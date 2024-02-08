@@ -34,7 +34,9 @@ const userSchema = gql`
     ): User
     deleteUser(
         id: ID!
+        confirm: Boolean!
     ): Boolean
+    clearUsers: Boolean
   }
 
   type AuthPayload {
