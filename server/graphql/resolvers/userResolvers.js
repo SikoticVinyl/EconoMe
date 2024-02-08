@@ -10,26 +10,26 @@ const resolvers = {
   Mutation: {
     createUser: async (_, { fullName, username, email, password }) => {
       console.log('Creating user:', { fullName, username, email, password });
-
+  
       const newUser = new User({ fullName, username, email, password });
-
+  
       try {
         await newUser.save();
-
-        const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
-          expiresIn: '1d',
-        });
-
         console.log('User created:', newUser);
-
-        return { token, user: newUser };
+  
+        // Return the newUser object with MongoDB's _id as GraphQL's id
+        return {
+          id: newUser._id.toString(),
+          fullName: newUser.fullName,
+          username: newUser.username,
+          email: newUser.email,
+        };
       } catch (error) {
         if (error.code === 11000) {
           throw new UserInputError('Username or email already exists.');
         }
-
+  
         console.error('Error creating user:', error);
-
         throw new UserInputError(error.message);
       }
     },
