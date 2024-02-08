@@ -31,27 +31,31 @@ const budgetResolvers = {
     },
   },
   Mutation: {
-    createBudget: async (_, { name, date }, context) => {
-      // Ensure the user is authenticated, and implement logic to create a new budget
+    createBudget: async (_, { name }, context) => {
       if (!context.user) {
+        console.log('Authentication required');
         throw new AuthenticationError('Authentication required');
       }
-
+    
+      console.log(`Creating a new budget for user: ${context.user.id}`);
+    
       const newBudget = new Budget({
         user: context.user.id,
         name,
-        date,
       });
-
+    
       try {
         await newBudget.save();
+        console.log(`Budget created successfully: ${JSON.stringify(newBudget)}`);
         return newBudget;
       } catch (error) {
+        console.error('Error creating budget:', error);
         throw new UserInputError(error.message);
       }
     },
-    updateBudget: async (_, { id, name, date }, context) => {
-      // Ensure the user is authenticated, and implement logic to update an existing budget by ID
+    
+    updateBudget: async (_, { id, name }, context) => {
+      // Ensure the user is authenticated
       if (!context.user) {
         throw new AuthenticationError('Authentication required');
       }
@@ -59,7 +63,7 @@ const budgetResolvers = {
       try {
         const updatedBudget = await Budget.findByIdAndUpdate(
           id,
-          { name, date },
+          { name },
           { new: true } // Return the updated budget
         );
 

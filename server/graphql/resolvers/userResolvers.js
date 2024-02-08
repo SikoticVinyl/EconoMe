@@ -9,33 +9,33 @@ const Transaction = require('../../models/Transaction');
 const resolvers = {
   Mutation: {
     createUser: async (_, { fullName, username, email, password }) => {
-      console.log('Creating user:', { fullName, username, email, password });
-
+      console.log('Creating user:', { fullName, username, email}, 'Password hidden for security.');
+  
       const newUser = new User({ fullName, username, email, password });
-
+  
       try {
         await newUser.save();
-
-        const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
-          expiresIn: '1d',
-        });
-
         console.log('User created:', newUser);
-
-        return { token, user: newUser };
+  
+        // Return the newUser object with MongoDB's _id as GraphQL's id
+        return {
+          id: newUser._id.toString(),
+          fullName: newUser.fullName,
+          username: newUser.username,
+          email: newUser.email,
+        };
       } catch (error) {
         if (error.code === 11000) {
           throw new UserInputError('Username or email already exists.');
         }
-
+  
         console.error('Error creating user:', error);
-
         throw new UserInputError(error.message);
       }
     },
 
     loginUser: async (_, { username, password }) => {
-      console.log('Logging in user:', { username, password });
+      console.log('Logging in user:', { username});
 
       const user = await User.findOne({ username }).select('+password');
 
@@ -53,7 +53,7 @@ const resolvers = {
         expiresIn: '1d',
       });
 
-      console.log('User logged in:', user);
+      console.log('User logged in:', username );
 
       return { token, user };
     },
@@ -92,7 +92,7 @@ const resolvers = {
         throw new UserInputError('Deletion must be confirmed');
       }
 
-      if (!context.user || context.user.id !== id) {
+      if (!context.user || context.user._id !== id) {
         throw new AuthenticationError('Unauthorized or not logged in');
       }
 
