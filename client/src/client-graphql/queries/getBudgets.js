@@ -12,3 +12,17 @@ export const GET_BUDGETS = gql`
         }
     }
 `;
+
+export const GET_BUDGET_BY_ID = gql`
+    query GetBudgetById($id: ID!) {
+        budget(id: $id) {
+            id
+            name
+            categories {
+                id
+                name
+                flexB
+            }
+        }
+    }
+`;
