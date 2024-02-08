@@ -9,3 +9,12 @@ exports.getTotalIncome = async (userId) => {
   ]);
   return result[0] ? result[0].totalIncome : 0;
 };
+
+// Total Expenses
+exports.getTotalExpenses = async (userId) => {
+  const result = await Transaction.aggregate([
+    { $match: { user: mongoose.Types.ObjectId(userId), transactionType: 'expense' } },
+    { $group: { _id: null, totalExpenses: { $sum: "$amount" } } }
+  ]);
+  return result[0] ? result[0].totalExpenses : 0;
+};
