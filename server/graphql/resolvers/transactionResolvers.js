@@ -139,6 +139,27 @@ const transactionResolvers = {
         throw new UserInputError(error.message);
       }
     },
+    deleteMany: async (_, __, context) => {
+      if (!context.user) {
+        throw new AuthenticationError('Authentication required');
+      }
+    
+      try {
+        // Use deleteMany to remove all transactions where the user field matches the logged-in user's id
+        const result = await Transaction.deleteMany({ user: context.user.id });
+    
+        // Optional: Check if transactions were deleted and respond accordingly
+        if (result.deletedCount === 0) {
+          throw new UserInputError('No transactions found to delete');
+        }
+    
+        // Return a message or boolean indicating success
+        return true; // or return a message like "Transactions successfully deleted"
+      } catch (error) {
+        console.error('Error deleting user transactions:', error);
+        throw new UserInputError(error.message);
+      }
+    },
   },
 };
 
