@@ -11,11 +11,7 @@ const budgetSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  date: {
-    type: Date,
-    required: true,
-  },
-  categories: [categorySchema], 
+  categories: [categorySchema],
 });
 
 const Budget = mongoose.model('Budget', budgetSchema);
