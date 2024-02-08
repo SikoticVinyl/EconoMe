@@ -18,7 +18,12 @@ const categorySchema = new mongoose.Schema({
   filter: {
     type: String,
     enum: ['Income', 'Expenses', 'Savings'],
-    required: [true, 'Please specify the category filter'],
+    required: [false, 'Please specify the category filter'],
+  },
+  budget: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Budget',
+    required: true,
   },
 });
 
