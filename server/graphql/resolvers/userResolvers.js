@@ -86,54 +86,58 @@ const resolvers = {
 
     deleteUser: async (_, { id, confirm }, context) => {
       console.log('Deleting user:', { id, confirm });
-
+    
       // Check for user confirmation
       if (!confirm) {
         throw new UserInputError('Deletion must be confirmed');
       }
-
-      if (!context.user || context.user._id !== id) {
+    
+      if (!context.user || context.user._id.toString() !== id) {
         throw new AuthenticationError('Unauthorized or not logged in');
       }
-
+    
       try {
         // Deleting all associated Transactions.
         await Transaction.deleteMany({ user: id });
-
-        // Delete all Categories associated with the user's Budgets.
+    
+        // Find all Budgets owned by the user to delete associated Categories
         const budgets = await Budget.find({ user: id });
-        const budgetIds = budgets.map((budget) => budget._id);
+        const budgetIds = budgets.map(budget => budget._id);
+    
+        // Delete all Categories associated with the user's Budgets.
         await Category.deleteMany({ budget: { $in: budgetIds } });
-
+    
         // Delete all Budgets owned by the user
         await Budget.deleteMany({ user: id });
-
+    
         // Delete the User
         const result = await User.findByIdAndDelete(id);
-
+    
+        if (!result) {
+          throw new UserInputError('User not found');
+        }
+    
         console.log(`User ${id} and all associated data have been deleted.`);
-
+    
         return true;
       } catch (error) {
         console.error('Error deleting user:', error);
-
-        // Handle errors, should set up for permission issues or user not found.
-        throw error;
+        throw new Error(error);
       }
     },
     clearUsers: async () => {
       try {
         // 1. Delete all Transactions associated with users
-        //await Transaction.deleteMany({ user: { $exists: true } });
+        //await Transaction.deleteAllUserTransactions({ user: { $exists: true } });
     
         // 2. Delete all Categories associated with users' Budgets
-        //await Category.deleteMany({ budget: { $exists: true } });
+        //await Category.deleteAllUserTransactions({ budget: { $exists: true } });
     
         // 3. Delete all Budgets owned by users
-        await Budget.deleteMany({ user: { $exists: true } });
+        await Budget.deleteAllUserTransactions({ user: { $exists: true } });
     
         // 4. Delete all Users
-        await User.deleteMany({});
+        await User.deleteAllUserTransactions({});
     
         console.log('All users and associated data have been cleared.');
         

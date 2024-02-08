@@ -119,14 +119,14 @@ const transactionResolvers = {
       await Transaction.findByIdAndDelete(id);
       return { id }; // Assuming you want to return the ID of the deleted transaction for confirmation
     },
-    deleteMany: async (_, __, context) => {
+    deleteAllUserTransactions: async (_, __, context) => {
       if (!context.user) {
         throw new AuthenticationError('Authentication required');
       }
     
       try {
-        // Use deleteMany to remove all transactions where the user field matches the logged-in user's id
-        const result = await Transaction.deleteMany({ user: context.user.id });
+        // Use deleteAllUserTransactions to remove all transactions where the user field matches the logged-in user's id
+        const result = await Transaction.deleteAllUserTransactions({ user: context.user.id });
     
         // Optional: Check if transactions were deleted and respond accordingly
         if (result.deletedCount === 0) {

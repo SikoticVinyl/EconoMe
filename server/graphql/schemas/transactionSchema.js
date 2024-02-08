@@ -40,6 +40,7 @@ const transactionSchema = gql`
     ): Transaction
     moveTransaction(transactionId: ID!, newCategoryId: ID!): Transaction
     deleteTransaction(id: ID!): Transaction
+    deleteAllUserTransactions: Boolean!
   }
 `;
 
