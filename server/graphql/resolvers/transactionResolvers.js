@@ -86,7 +86,7 @@ const transactionResolvers = {
           throw new UserInputError(error.message);
         }
       },
-      
+
       updateTransaction: async (_, { id, name, amount, dueDate, payDate, flexible, paid }, context) => {
         if (!context.user) {
           throw new AuthenticationError('Authentication required');
