@@ -6,7 +6,7 @@ const categorySchema = gql`
     name: String!
     flexB: Boolean!
     transactions: [Transaction]
-    filter: String!
+    filter: String
     budget: Budget!
     linked: Boolean
   }
