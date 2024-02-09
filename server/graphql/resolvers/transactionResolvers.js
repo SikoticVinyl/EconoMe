@@ -66,7 +66,7 @@ const transactionResolvers = {
           transactionType,
           category: categoryId,
           user: context.user._id,
-          paid: false,
+          paid: false
         };
         // Adjust fields based on the transaction type
         if (transactionType === "expense") {
