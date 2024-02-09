@@ -13,7 +13,8 @@ export default {
         'nebula': ['Nabla', 'sans-serif'],
         'protest-riot': ['Protest Riot', 'sans-serif'],
         'Sixtyfour':  ['Sixtyfour', 'sans-serif'],
-        'rubik-doodle': ['Rubik Doodle Shadow', 'system-ui']
+        'rubik-doodle': ['Rubik Doodle Shadow', 'system-ui'],
+        'moirai': ['"Moirai One"', 'system-ui'],
       },
       colors: {
         'color1': '#d7d4db', // light grey
@@ -22,12 +23,19 @@ export default {
         'color4': '#1c5d3b', // green
         'color5': '#044c26', // dark green
       },
-      
       backgroundImage: {
         'gradient-to-t': 'linear-gradient(to top, var(--tw-gradient-stops))',
         'blend-luminosity': 'luminosity',
         'blend-mode': 'blend-mode',
      },
+    },
+  },
+  variants: {
+    extend: {
+      backgroundColor: ['hover', 'focus'],
+      transitionProperty: ['hover', 'focus'],
+      transform: ['hover', 'focus'],
+      scale: ['hover', 'focus'],
     },
   },
   plugins: [],

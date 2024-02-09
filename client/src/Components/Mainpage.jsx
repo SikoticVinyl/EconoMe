@@ -39,7 +39,7 @@ function MainPage({}) {
         />
       </svg>
       <Link to="/homepage" className="mb-4">
-        <button className="px-4 py-2 bg-gray-800 text-white rounded shadow-xl hover:bg-gray-700 active:scale-90 transform transition duration-150 ease-in-out cursor-pointer">
+        <button className="px-4 py-2 bg-gray-800 text-white rounded shadow-xl hover:bg-gray-700 active:scale-90 cursor-pointer duration-300 ">
           Lets get started
         </button>
       </Link>
