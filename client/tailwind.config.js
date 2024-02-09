@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       animation: {
-        slowping: 'ping 2s cubic-bezier(0, 0, 0.2, 1) infinite',
+        slowping: 'ping 10s cubic-bezier(0, 0, 0.2, 1) infinite',
       },
       fontFamily: {
         'nebula': ['Nabla', 'sans-serif'],
