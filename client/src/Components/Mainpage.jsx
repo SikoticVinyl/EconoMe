@@ -1,13 +1,12 @@
 // MainPage.jsx
 import { Link } from "react-router-dom";
-import reactLogo from "../assets/react.svg";
 import viteLogo from "/vite.svg";
-import PropTypes from "prop-types";
+import "../index.css";
 import nightModeIcon from "../assets/nightmode-svgrepo-com.svg";
 
-function MainPage({ darkMode, toggleDarkMode }) {
+function MainPage({}) {
   return (
-    <div>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-green-400 to-blue-500 text-gray-900">
       <div className="fixed top-0 right-0 m-4">
         <button
           onClick={(e) => {
@@ -16,48 +15,43 @@ function MainPage({ darkMode, toggleDarkMode }) {
           }}
           className="p-2 bg-gray-600 text-white rounded-full hover:bg-gray-700 focus:outline-none"
         >
-          <img
-            src={nightModeIcon}
-            alt="Toggle dark mode"
-            style={{ height: "24px", width: "24px" }}
-          />{" "}
+          <img src={nightModeIcon} alt="Toggle dark mode" className="w-6 h-6" />{" "}
           {/* use your SVG as the button's icon */}
         </button>
       </div>
-      <div>
-        <a href="https://vitejs.dev" target="_blank" rel="noopener noreferrer">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
+      <div className="mb-4">
+        <a href="" alt="Logo" target="_blank" rel="noopener noreferrer">
+          <img src={viteLogo} className="w-32 h-32" alt="Vite logo" />
         </a>
       </div>
-      <h1>Pennywise</h1>
-      <div>
-        {/* ... other elements ... */}
-        <Link to="/overviewpage">Go to Overview Page</Link>
-      </div>
-
-      <Link to="/homepage">
-        <button>Lets get started</button>
-      </Link>
-
-      <footer
-        style={{
-          position: "absolute",
-          bottom: 0,
-          width: "100%",
-          height: "2.5rem",
-          fontSize: "0.8rem",
-          textAlign: "center",
-        }}
+      <h1 className="mb-4 text-4xl font-bold font-nebula animate-bounce animate-ping">EconoMe</h1>
+      <svg
+        className="animate-bounce w-6 h-6"
+        viewBox="0 0 20 20"
+        fill="currentColor"
       >
+        <path
+          fillRule="evenodd"
+          d="M10 16a.714.714 0 01-.504-.21l-5.25-5.517a.714.714 0 111.008-1.007L10 14.293l4.746-4.927a.714.714 0 111.008 1.007l-5.25 5.517A.714.714 0 0110 16z"
+          clipRule="evenodd"
+        />
+      </svg>
+      <Link to="/homepage" className="mb-4">
+        <button className="px-4 py-2 bg-black text-white rounded hover:bg-gray-900">
+          Lets get started
+        </button>
+      </Link>
+      <div className="mb-4">
+        {/* ... other elements ... */}
+        <Link to="/overviewpage" className="text-blue-500 hover:underline">
+          Go to Overview Page
+        </Link>
+      </div>
+      <footer className="absolute bottom-0 w-full h-16 text-sm text-center bg-gray-200">
         &copy; {new Date().getFullYear()} JuiceHeads
       </footer>
     </div>
   );
 }
-
-MainPage.propTypes = {
-  darkMode: PropTypes.bool.isRequired,
-  toggleDarkMode: PropTypes.func.isRequired,
-};
 
 export default MainPage;

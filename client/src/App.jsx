@@ -5,7 +5,7 @@ import Login from "./Components/Login";
 import Signup from "./Components/Signup";
 import MainPage from "./Components/Mainpage";
 import HomePage from "./Components/HomePage"; // import HomePage component
-import "./App.css";
+import './index.css';
 import OverviewPage from "./Components/OverviewPage"; // rename overviewpage to OverviewPage
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -17,6 +17,9 @@ function App() {
       document.documentElement.classList.remove("dark");
     }
   };
+  <div className="min-h-screen bg-blue-100 flex items-center justify-center">
+  <h1 className="text-4xl font-bold text-blue-900">App</h1>
+</div>
   return (
     <Router>
       <Routes>
