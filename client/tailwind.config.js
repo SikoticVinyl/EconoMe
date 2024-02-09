@@ -11,17 +11,22 @@ export default {
       },
       fontFamily: {
         'nebula': ['Nabla', 'sans-serif'],
+        'protest-riot': ['Protest Riot', 'sans-serif'],
+        'Sixtyfour':  ['Sixtyfour', 'sans-serif'],
+        'rubik-doodle': ['Rubik Doodle Shadow', 'system-ui']
       },
       colors: {
-        'color1': '#d7d4db',
-        'color2': '#447093',
-        'color3': '#184461',
-        'color4': '#1c5d3b',
-        'color5': '#044c26',
+        'color1': '#d7d4db', // light grey
+        'color2': '#447093', // blue
+        'color3': '#184461', // dark blue
+        'color4': '#1c5d3b', // green
+        'color5': '#044c26', // dark green
       },
       
       backgroundImage: {
         'gradient-to-t': 'linear-gradient(to top, var(--tw-gradient-stops))',
+        'blend-luminosity': 'luminosity',
+        'blend-mode': 'blend-mode',
      },
     },
   },

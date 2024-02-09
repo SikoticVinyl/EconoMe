@@ -21,10 +21,12 @@ function MainPage({}) {
       </div>
       <div className="mb-4">
         <a href="" alt="Logo" target="_blank" rel="noopener noreferrer">
-          <img src={viteLogo} className="w-32 h-32" alt="Vite logo" />
+          <img src={viteLogo} className="w-32 h-32 hover:animate-spin" alt="Vite logo" />
         </a>
       </div>
-      <h1 className="mb-4 text-4xl font-bold font-nebula animate-bounce animate-ping">EconoMe</h1>
+      <h1 className="mb-4 text-4xl font-bold font-rubik-doodle animate-bounce animate-slowping text-color4">
+        EconoMe
+      </h1>
       <svg
         className="animate-bounce w-6 h-6"
         viewBox="0 0 20 20"
@@ -37,7 +39,7 @@ function MainPage({}) {
         />
       </svg>
       <Link to="/homepage" className="mb-4">
-        <button className="px-4 py-2 bg-black text-white rounded hover:bg-gray-900">
+        <button className="px-4 py-2 bg- text-white rounded shadow-lg hover:bg-color2 active:scale-90 transform transition duration-150 ease-in-out cursor-pointer">
           Lets get started
         </button>
       </Link>
@@ -47,8 +49,8 @@ function MainPage({}) {
           Go to Overview Page
         </Link>
       </div>
-      <footer className="absolute bottom-0 w-full h-16 text-sm text-center bg-gray-200">
-        &copy; {new Date().getFullYear()} JuiceHeads
+      <footer className="absolute bottom-0 w-full h-16 text-sm text-center bg-gray-200 bg-gradient-to-r from-green-400 to-blue-500 text-gray-900 ">
+        &copy; {new Date().getFullYear()} EconoMe
       </footer>
     </div>
   );
