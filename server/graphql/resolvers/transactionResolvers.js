@@ -23,6 +23,30 @@ const transactionResolvers = {
         const transactions = await Transaction.find({ user: context.user._id });
         return transactions;
       },
+      totalIncome: async (_, __, context) => {
+        if (!context.user) {
+          throw new AuthenticationError('Authentication required');
+        }
+        return await transactionServices.getTotalIncome(context.user._id);
+      },
+      totalExpenses: async (_, __, context) => {
+        if (!context.user) {
+          throw new AuthenticationError('Authentication required');
+        }
+        return await transactionServices.getTotalExpenses(context.user._id);
+      },
+      totalSavings: async (_, __, context) => {
+        if (!context.user) {
+          throw new AuthenticationError('Authentication required');
+        }
+        return await transactionServices.getTotalSavings(context.user._id);
+      },
+      totalFlexibleExpenses: async (_, __, context) => {
+        if (!context.user) {
+          throw new AuthenticationError('Authentication required');
+        }
+        return await transactionServices.getTotalFlexibleExpenses(context.user._id);
+      }
     },
     Mutation: {
     createTransaction: async (_, { name, amount, transactionType, dueDate, payDate, flexible, categoryId }, context) => {
