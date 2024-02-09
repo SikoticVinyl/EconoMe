@@ -1,6 +1,7 @@
 const { UserInputError, AuthenticationError } = require('apollo-server-express');
 const Transaction = require('../../models/Transaction');
 const Category = require('../../models/Category');
+const transactionServices = require('../../services/transactionService');
 
 const transactionResolvers = {
     Query: {
@@ -141,7 +142,7 @@ const transactionResolvers = {
         }
   
         await Transaction.findByIdAndDelete(id);
-        return { id }; // Assuming you want to return the ID of the deleted transaction for confirmation
+        return { id };
       },
     },
   };
