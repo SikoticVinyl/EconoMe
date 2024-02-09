@@ -1,6 +1,7 @@
 const { UserInputError, AuthenticationError } = require('apollo-server-express');
 const Transaction = require('../../models/Transaction');
 const Category = require('../../models/Category');
+const transactionServices = require('../../services/transactionService');
 
 const transactionResolvers = {
     Query: {
@@ -23,6 +24,30 @@ const transactionResolvers = {
         const transactions = await Transaction.find({ user: context.user._id });
         return transactions;
       },
+      totalIncome: async (_, __, context) => {
+        if (!context.user) {
+          throw new AuthenticationError('Authentication required');
+        }
+        return await transactionServices.getTotalIncome(context.user._id);
+      },
+      totalExpenses: async (_, __, context) => {
+        if (!context.user) {
+          throw new AuthenticationError('Authentication required');
+        }
+        return await transactionServices.getTotalExpenses(context.user._id);
+      },
+      totalSavings: async (_, __, context) => {
+        if (!context.user) {
+          throw new AuthenticationError('Authentication required');
+        }
+        return await transactionServices.getTotalSavings(context.user._id);
+      },
+      totalFlexibleExpenses: async (_, __, context) => {
+        if (!context.user) {
+          throw new AuthenticationError('Authentication required');
+        }
+        return await transactionServices.getTotalFlexibleExpenses(context.user._id);
+      }
     },
     Mutation: {
     createTransaction: async (_, { name, amount, transactionType, dueDate, payDate, flexible, categoryId }, context) => {
@@ -41,7 +66,7 @@ const transactionResolvers = {
           transactionType,
           category: categoryId,
           user: context.user._id,
-          paid: false,
+          paid: false
         };
         // Adjust fields based on the transaction type
         if (transactionType === "expense") {
@@ -61,7 +86,7 @@ const transactionResolvers = {
           throw new UserInputError(error.message);
         }
       },
-      
+
       updateTransaction: async (_, { id, name, amount, dueDate, payDate, flexible, paid }, context) => {
         if (!context.user) {
           throw new AuthenticationError('Authentication required');
@@ -117,7 +142,7 @@ const transactionResolvers = {
         }
   
         await Transaction.findByIdAndDelete(id);
-        return { id }; // Assuming you want to return the ID of the deleted transaction for confirmation
+        return { id };
       },
     },
   };
