@@ -7,7 +7,7 @@ import nightModeIcon from "../assets/nightmode-svgrepo-com.svg";
 function MainPage({}) {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-green-400 to-blue-500 text-gray-900">
-      <div className="fixed top-0 right-0 m-4">
+      <div className="fixed top-0 right-0 m-4 sm:m-6 md:m-8 lg:m-10 xl:m-12">
         <button
           onClick={(e) => {
             toggleDarkMode();
@@ -19,16 +19,20 @@ function MainPage({}) {
           {/* use your SVG as the button's icon */}
         </button>
       </div>
-      <div className="mb-4">
+      <div className="absolute top-40 sm:top-48 md:top-56 lg:top-64 xl:top-72">
         <a href="" alt="Logo" target="_blank" rel="noopener noreferrer">
-          <img src={viteLogo} className="w-32 h-32 hover:animate-spin" alt="Vite logo" />
+          <img
+            src={viteLogo}
+            className="w-32 h-32 hover:animate-spin sm:w-36 sm:h-36 md:w-40 md:h-40 lg:w-44 lg:h-44 xl:w-48 xl:h-48"
+            alt="Vite logo"
+          />
         </a>
       </div>
-      <h1 className="mb-4 text-4xl font-bold font-rubik-doodle animate-slowping text-color5">
+      <h1 className="mb-4 text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold font-rubik-doodle text-color5">
         EconoMe
       </h1>
       <svg
-        className="animate-bounce w-6 h-6"
+        className="animate-bounce w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-9 lg:h-9 xl:w-10 xl:h-10"
         viewBox="0 0 20 20"
         fill="currentColor"
       >
