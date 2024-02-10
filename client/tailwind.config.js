@@ -27,6 +27,7 @@ export default {
         'gradient-to-t': 'linear-gradient(to top, var(--tw-gradient-stops))',
         'blend-luminosity': 'luminosity',
         'blend-mode': 'blend-mode',
+        'old-standard-tt': ['Old Standard TT', 'serif'],
      },
     },
   },

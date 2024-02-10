@@ -24,7 +24,7 @@ function MainPage({}) {
           <img src={viteLogo} className="w-32 h-32 hover:animate-spin" alt="Vite logo" />
         </a>
       </div>
-      <h1 className="mb-4 text-4xl font-bold font-rubik-doodle animate-bounce animate-slowping text-color4">
+      <h1 className="mb-4 text-4xl font-bold font-rubik-doodle animate-slowping text-color5">
         EconoMe
       </h1>
       <svg

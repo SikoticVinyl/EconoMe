@@ -19,7 +19,7 @@ function Signup() {
     });
   };
 
-  const handleSignup = async (e) => {
+const handleSignup = async (e) => {
     e.preventDefault();
 
     try {

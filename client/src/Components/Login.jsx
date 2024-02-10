@@ -40,29 +40,37 @@ function Login() {
   };
 
   return (
-    <div>
-      <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Username:
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-400 to-blue-500">
+      <div className="p-8 bg-white rounded shadow-md w-80">
+        <h1 className="mb-6 text-3xl font-bold text-center">Login</h1>
+        <form onSubmit={handleSubmit}>
+          <label className="block mb-2">
+            Username:
+            <input
+              type="text"
+              name="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="w-full px-3 py-2 border rounded mt-1"
+            />
+          </label>
+          <label className="block mb-2">
+            Password:
+            <input
+              type="password"
+              name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-3 py-2 border rounded mt-1"
+            />
+          </label>
           <input
-            type="text"
-            name="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            type="submit"
+            value="Submit"
+            className="w-full px-3 py-2 mt-4 text-white bg-blue-500 rounded hover:bg-blue-600"
           />
-        </label>
-        <label>
-          Password:
-          <input
-            type="password"
-            name="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </label>
-        <input type="submit" value="Submit" />
-      </form>
+        </form>
+      </div>
     </div>
   );
 }
