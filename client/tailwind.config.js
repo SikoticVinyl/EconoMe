@@ -36,7 +36,7 @@ export default {
       backgroundColor: ['hover', 'focus'],
       transitionProperty: ['hover', 'focus'],
       transform: ['hover', 'focus'],
-      scale: ['hover', 'focus'],
+      scale: ['hover', 'focus', 'active'],
     },
   },
   plugins: [],

@@ -41,8 +41,8 @@ function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-400 to-blue-500">
-      <div className="p-8 bg-white rounded shadow-md w-80">
-        <h1 className="mb-6 text-3xl font-bold text-center">Login</h1>
+      <div className="p-8 bg-white rounded shadow-lg w-80">
+        <h1 className="mb-6 text-3xl font-bold text-center font-rubik-doodle">Login</h1>
         <form onSubmit={handleSubmit}>
           <label className="block mb-2">
             Username:
@@ -65,10 +65,10 @@ function Login() {
             />
           </label>
           <input
-            type="submit"
-            value="Submit"
-            className="w-full px-3 py-2 mt-4 text-white bg-blue-500 rounded hover:bg-blue-600"
-          />
+  type="submit"
+  value="Submit"
+  className="w-full px-3 py-2 mt-4 text-white bg-gradient-to-r from-blue-500 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded cursor-pointer active:scale-90 transform transition duration-300 ease-in-out hover:scale-105"
+/>
         </form>
       </div>
     </div>
