@@ -21,18 +21,9 @@ function Login() {
       console.log('Data sent to server:', { username, password });
       
       if (data && data.loginUser && data.loginUser.token) {
-        // You have a valid token here, you can store it in localStorage or a cookie
         const token = data.loginUser.token;
-
-        // Log the token
         console.log('Token received from server:', token);
-
-        // You can now redirect the user to a protected route or perform other actions
-        //Token in localStorage:
         localStorage.setItem('token', token);
-
-        // Redirect the user to a protected page:
-        // history.push('/dashboard');
       }
     } catch (error) {
       console.error('Login error:', error);
@@ -40,7 +31,8 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-400 to-blue-500">
+    <div className="min-h-screen flex items-center justify-center" 
+         style={{ backgroundImage: `url(/Loginbg.jpg)`, backgroundSize: 'cover' }}>
       <div className="p-8 bg-white rounded shadow-lg w-80">
         <h1 className="mb-6 text-3xl font-bold text-center font-rubik-doodle">Login</h1>
         <form onSubmit={handleSubmit}>
@@ -65,10 +57,10 @@ function Login() {
             />
           </label>
           <input
-  type="submit"
-  value="Submit"
-  className="w-full px-3 py-2 mt-4 text-white bg-gradient-to-r from-blue-500 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded cursor-pointer active:scale-90 transform transition duration-300 ease-in-out hover:scale-105"
-/>
+            type="submit"
+            value="Submit"
+            className="w-full px-3 py-2 mt-4 text-white bg-gradient-to-r from-blue-500 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded cursor-pointer active:scale-90 transform transition duration-300 ease-in-out hover:scale-105"
+          />
         </form>
       </div>
     </div>

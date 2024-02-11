@@ -8,26 +8,24 @@ function OverviewPage() {
   const savingsGoals = 200;
   const profit = incomeTotal - expensesTotal;
 
-  // Replace this with your actual profile image URL
-  const profileImageUrl = "https://example.com/profile.jpg";
-
   return (
-    <div className="flex flex-col h-screen justify-center items-center relative">
-      <button
-        className="absolute top-0 left-0 m-4 p-2 flex flex-col justify-around h-6 w-6"
-        onClick={() => {
-          /* handle navigation */
-        }}
-      >
-        <span className="bg-black h-0.5 w-full"></span>
-        <span className="bg-black h-0.5 w-full"></span>
-        <span className="bg-black h-0.5 w-full"></span>
-      </button>
-      <Link to="/profile" className="absolute top-0 right-0 m-4">
+    <div
+      className="flex flex-col h-screen justify-center items-center relative"
+      style={{
+        backgroundImage: `url(/Overviewpage1.jpg)`,
+        backgroundSize: "cover",
+      }}
+    >
+<Link to="/your-desired-path" className="absolute top-0 left-0 m-4 h-12 w-12 flex flex-col justify-center items-center border-2 border-black shadow-md border-dashed rounded bg-gradient-to-r from-green-200 to-green-400 px-1">
+  <span className="bg-black h-0.5 w-full border border-black border-dashed"></span>
+  <span className="bg-black h-0.5 w-full my-1 border border-black border-dashed"></span>
+  <span className="bg-black h-0.5 w-full border border-black border-dashed"></span>
+</Link>
+      <Link to="/profile" className="absolute top-0 right-0 m-4 h-12 w-12">
         <img
           src="/Profileicon.jpg"
           alt="Profile"
-          className="h-12 w-12 rounded-full"
+          className="h-full w-full rounded-full object-cover block"
         />
       </Link>
       <div className="flex flex-col h-screen justify-center items-center">
@@ -39,9 +37,9 @@ function OverviewPage() {
           <p className="text-xl">Profit: {profit}</p>
         </div>
       </div>
-      <div className="mt-auto mb-4">
+      <div className="mb-20">
         <Link
-          className="p-2 bg-green-500 text-white rounded"
+          className="p-4 text-2xl bg-green-500 text-white rounded"
           to="/update-income"
         >
           Update Income
