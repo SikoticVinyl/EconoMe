@@ -21,7 +21,7 @@ function OverviewPage() {
         <p>Savings Goals: {savingsGoals}</p>
         <p>Profit: {profit}</p>
       </div>
-      <Link to="/update-income">Update Income</Link>
+      <Link to="/update-Budget">Update Budget</Link>
     </div>
   );
 }
