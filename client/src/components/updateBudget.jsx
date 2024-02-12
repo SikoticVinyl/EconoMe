@@ -10,9 +10,7 @@ function Updatebudget() {
   const leftover = 5;
   return (
     <div>
-      <div>
-        <button onClick={() => {/* handle navigation */}}>App Navigation</button>
-      </div>
+     
       <div>
         <h1>Income Total</h1>
         <p>My Job: {MyJob}</p>
@@ -25,7 +23,7 @@ function Updatebudget() {
 
         <h2> Left over: {leftover}</h2>
       </div>
-      <Link to="/updateBudget">Update Budget</Link>
+      <Link to="/overviewpage">Back to Overview</Link>
     </div>
   );
 }

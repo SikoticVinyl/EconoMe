@@ -8,7 +8,7 @@ import HomePage from "./Components/HomePage"; // import HomePage component
 import "./App.css";
 import OverviewPage from "./Components/OverviewPage"; // rename overviewpage to OverviewPage
 import UpdateBudget from "./Components/updateBudget";
-import UserProfilepage from "./Components/updateBudget";
+import UserProfilepage from "./Components/userProfilepage";
 function App() {
   const [darkMode, setDarkMode] = useState(false);
   const toggleDarkMode = () => {

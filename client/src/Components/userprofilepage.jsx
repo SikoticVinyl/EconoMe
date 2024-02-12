@@ -6,7 +6,7 @@ function UserProfilepage() {
   return (
     <div>
 
-      
+
       <div>
         <h1> First Last</h1>
       </div>
@@ -14,7 +14,7 @@ function UserProfilepage() {
       <h2> <button onClick={() => {/* handle navigation */}}>Income</button> </h2>
       <h2> <button onClick={() => {/* handle navigation */}}>Pay Day</button> </h2>
       </div>
-      <Link to="/user-settings">User Settings</Link>
+      <Link to="/usersettings">User Settings</Link>
     </div>
   );
 }
