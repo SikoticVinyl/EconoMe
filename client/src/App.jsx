@@ -10,6 +10,7 @@ import OverviewPage from "./Components/OverviewPage"; // rename overviewpage to 
 import UpdateBudget from "./Components/updateBudget";
 import UserProfilepage from "./Components/userProfilepage";
 import userSettings from "./Components/userSettings";
+import detailBudget from "./Components/detailBudget";
 function App() {
   const [darkMode, setDarkMode] = useState(false);
   const toggleDarkMode = () => {
@@ -31,6 +32,7 @@ function App() {
         <Route path="/updateBudget" element={<UpdateBudget />} />
         <Route path="/userProfilepage" element={<UserProfilepage />} />
         <Route path="/userSettings" element={<userSettings />} />
+        <Route path="/detailBudget" element={<detailBudget />} />
       </Routes>
     </Router>
     

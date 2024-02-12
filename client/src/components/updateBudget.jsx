@@ -24,6 +24,9 @@ function Updatebudget() {
         <h2> Left over: {leftover}</h2>
       </div>
       <Link to="/overviewpage">Back to Overview</Link>
+      <p>
+      <Link to="/detailBudget">Budget Details</Link>
+      </p>
     </div>
   );
 }

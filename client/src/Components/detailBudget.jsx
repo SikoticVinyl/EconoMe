@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 // import userImage from './';
 
 
-function UserProfilepage() {
+function detailBudget() {
   // Replace these with your actual data
  
   return (
@@ -17,8 +17,8 @@ function UserProfilepage() {
       <h2> <button onClick={() => {/* handle navigation */}}>Income</button> </h2>
       <h2> <button onClick={() => {/* handle navigation */}}>Pay Day</button> </h2>
       </div>
-      <Link to="/usersettings">User Settings</Link>
+      <Link to="/updateBudget">Back to Update Budget</Link>
     </div>
   );
 }
-export default UserProfilepage;
+export default detailBudget;

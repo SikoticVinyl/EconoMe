@@ -29,11 +29,8 @@ function MainPage({ darkMode, toggleDarkMode }) {
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
       </div>
-      <h1>Pennywise</h1>
-      <div>
-        {/* ... other elements ... */}
-        <Link to="/overviewpage">Go to Overview Page</Link>
-      </div>
+      <h1>EconoMe</h1>
+      
 
       <Link to="/homepage">
         <button>Lets get started</button>
