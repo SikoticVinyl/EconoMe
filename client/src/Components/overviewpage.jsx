@@ -15,23 +15,22 @@ function OverviewPage() {
           <Link to="/userprofilepage">Profile</Link>
         </button>
       </div>
-      <div>
-        {/* //dropdowns */}
-        <h1>Overview</h1>
-        <p>Income Total: {incomeTotal}</p>
-        <p>Expenses Total: {expensesTotal}</p>
-        <p>Savings Goals: {savingsGoals}</p>
-        <p>Profit: {profit}</p>
-      </div>
-      
-      <label for="overview">Overview:</label>
+   
 
+      <h1>
+      <label for="overview">Overview:</label>
+      </h1>
+
+
+<h2>
 <select name="overview" id="overview"onChange={(event)=> setUserNum(event.target.value)}>
   <option value={incomeTotal}>Income Total</option>
   <option value={expensesTotal}>Expenses</option>
   <option value={savingsGoals}>Savings Goals</option>
   <option value={profit}>Profit</option>
 </select>
+</h2>
+
 <h2>${userNum}</h2>
 
 
