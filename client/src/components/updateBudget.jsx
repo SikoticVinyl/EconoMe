@@ -7,7 +7,7 @@ function Updatebudget() {
   const Rent = 1200;
   const CarPayment = 500;
   const Food = 300;
-  leftover = 5;
+  const leftover = 5;
   return (
     <div>
       <div>
@@ -25,7 +25,7 @@ function Updatebudget() {
 
         <h2> Left over: {leftover}</h2>
       </div>
-      <Link to="/update-Budget">Update Budget</Link>
+      <Link to="/updateBudget">Update Budget</Link>
     </div>
   );
 }
