@@ -4,8 +4,8 @@
 
 A budgeting app to make budgetting more dynamic and user friendly with Tracking expenses, income management, budget categories
 
-
 ## Table of Contents
+
 - [Installation](#installation)
 - [Checklist](#checklist)
 - [Credits](#credits)
@@ -17,6 +17,7 @@ A budgeting app to make budgetting more dynamic and user friendly with Tracking 
 Coming soon.....
 
 ## Installation
+
 npm install
 npm run dev
 
@@ -28,9 +29,6 @@ Use examples liberally, and show the expected output if you can. It's helpful to
 
 Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
 
-
-
-
 ## Authors/Collaborators and acknowledgment
 
 - Garrett Young
@@ -40,6 +38,7 @@ Tell people where they can go to for help. It can be any combination of an issue
 - Brendalee Alcala
 
 ### Tools Used:
+
 - Excalidraw
 - Tailwind
 - Node.js
@@ -48,4 +47,3 @@ Tell people where they can go to for help. It can be any combination of an issue
 - GET & POST
 - Authentication
 - Bootstrap
-

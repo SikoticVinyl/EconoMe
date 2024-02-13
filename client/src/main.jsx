@@ -6,17 +6,17 @@ import './index.css';
 
 // Set up Apollo Client
 const client = new ApolloClient({
-  uri: 'http://localhost:3001/graphql',
-  cache: new InMemoryCache(),
+	uri: 'http://localhost:3001/graphql',
+	cache: new InMemoryCache()
 });
 
 // Render the App component wrapped with ApolloProvider using createRoot
 const container = document.getElementById('root'); // Get the root container
 const root = createRoot(container); // Use createRoot for React 18
 root.render(
-  <React.StrictMode>
-    <ApolloProvider client={client}>
-      <App />
-    </ApolloProvider>
-  </React.StrictMode>
+	<React.StrictMode>
+		<ApolloProvider client={client}>
+			<App />
+		</ApolloProvider>
+	</React.StrictMode>
 );

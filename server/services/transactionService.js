@@ -1,38 +1,42 @@
-const Transaction = require('../models/Transaction');
+const { Budget } = require('../models/Budget');
+const { Category } = require('../models/Category');
 const mongoose = require('mongoose');
 
-// Total Income
-exports.getTotalIncome = async (userId) => {
-  const result = await Transaction.aggregate([
-    { $match: { user: mongoose.Types.ObjectId(userId), transactionType: 'income' } },
-    { $group: { _id: null, totalIncome: { $sum: "$amount" } } }
-  ]);
-  return result[0] ? result[0].totalIncome : 0;
-};
+// Helper function to fetch user's budget IDs
+async function fetchUserBudgetIds(userId) {
+	const budgets = await Budget.find(
+		{ user: new mongoose.Types.ObjectId(userId) },
+		'_id'
+	);
+	return budgets.map(budget => budget._id);
+}
 
-// Total Expenses
-exports.getTotalExpenses = async (userId) => {
-  const result = await Transaction.aggregate([
-    { $match: { user: mongoose.Types.ObjectId(userId), transactionType: 'expense' } },
-    { $group: { _id: null, totalExpenses: { $sum: "$amount" } } }
-  ]);
-  return result[0] ? result[0].totalExpenses : 0;
-};
+// Generalized aggregation function for transactions
+async function aggregateTransactions(userId, transactionType, flexible) {
+	const budgetIds = await fetchUserBudgetIds(userId);
+	const match = {
+		'transactions.transactionType': transactionType
+	};
+	if (flexible !== undefined) {
+		match['transactions.flexible'] = flexible;
+	}
 
-// Total Savings
-exports.getTotalSavings = async (userId) => {
-  const result = await Transaction.aggregate([
-    { $match: { user: mongoose.Types.ObjectId(userId), transactionType: 'savings' } },
-    { $group: { _id: null, totalSavings: { $sum: "$amount" } } }
-  ]);
-  return result[0] ? result[0].totalSavings : 0;
-};
+	const categories = await Category.aggregate([
+		{ $match: { budget: { $in: budgetIds } } },
+		{ $unwind: '$transactions' },
+		{ $match: match },
+		{ $group: { _id: null, total: { $sum: '$transactions.amount' } } }
+	]);
 
-// Total Flexible Expenses
-exports.getTotalFlexibleExpenses = async (userId) => {
-  const result = await Transaction.aggregate([
-    { $match: { user: mongoose.Types.ObjectId(userId), transactionType: 'expense', flexible: true } },
-    { $group: { _id: null, totalFlexible: { $sum: "$amount" } } }
-  ]);
-  return result[0] ? result[0].totalFlexible : 0;
-};
+	return categories[0] ? categories[0].total : 0;
+}
+
+// Exported service functions
+exports.getTotalIncome = async userId =>
+	aggregateTransactions(userId, 'income');
+exports.getTotalExpenses = async userId =>
+	aggregateTransactions(userId, 'expense');
+exports.getTotalSavings = async userId =>
+	aggregateTransactions(userId, 'savings');
+exports.getTotalFlexibleExpenses = async userId =>
+	aggregateTransactions(userId, 'expense', true);
