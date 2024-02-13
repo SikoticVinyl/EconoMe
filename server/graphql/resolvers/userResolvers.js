@@ -7,6 +7,18 @@ const Category = require('../../models/Category');
 const Transaction = require('../../models/Transaction');
 
 const resolvers = {
+  Query: {
+    users: async() => {
+      try {
+        const users = await User.find();
+        return users;
+      } catch (error) {
+        console.error('Error fetching users:', error);
+        throw new Error('Failed to fetch users');
+      }
+    }
+  },
+  
   Mutation: {
     createUser: async (_, { fullName, username, email, password }) => {
       console.log('Creating user:', { fullName, username, email}, 'Password hidden for security.');

@@ -16,6 +16,10 @@ const transactionSchema = gql`
   extend type Query {
     transaction(id: ID!): Transaction
     transactions: [Transaction]
+    totalIncome(userId: ID!): Float
+    totalExpenses(userId: ID!): Float
+    totalSavings(userId: ID!): Float
+    totalFlexibleExpenses(userId: ID!): Float
   }
 
   extend type Mutation {

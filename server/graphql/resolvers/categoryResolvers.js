@@ -23,15 +23,25 @@ const categoryResolvers = {
       if (!context.user) {
         throw new AuthenticationError('Authentication required');
       }
-
+    
       try {
-        // Fetch categories associated with the authenticated user's budget
-        const categories = await Category.find({ budget: context.user.budget });
-        return categories;
+        // Retrieve all budget IDs owned by the authenticated user
+        const budgets = await Budget.find({ user: context.user.id });
+    
+        // Array to hold all categories
+        let allCategories = [];
+    
+        // Iterate through each budget and fetch its associated categories
+        for (const budget of budgets) {
+          const categories = await Category.find({ budget: budget.id });
+          allCategories = [...allCategories, ...categories];
+        }
+    
+        return allCategories;
       } catch (error) {
         throw new UserInputError(error.message);
       }
-    },
+    }
   },
   Mutation: {
     createCategory: async (_, { name, flexB, budgetId }, context) => {
