@@ -225,56 +225,54 @@ const transactionResolvers = {
         }
       };
     },
+
+    //Future Feature - Move Transaction 
   
-    moveTransaction: async (_, { transactionId, newCategoryId }, context) => {
-      if (!context.user) {
-          throw new AuthenticationError('Authentication required');
-      }
+   // moveTransaction: async (_, { transactionId, newCategoryId }, context) => {
+   //   if (!context.user) {
+   //       throw new AuthenticationError('Authentication required');
+   //   }
   
-      try {
+   //   try {
           // Find the budget first
-          const budgets = await Budget.find({ user: context.user._id });
+   //       const budgets = await Budget.find({ user: context.user._id });
   
-          for (let budget of budgets) {
+   //      for (let budget of budgets) {
               // Find the category within the budget
-              const category = await Category.findOne({ _id: newCategoryId, budget: budget._id });
+   //           const category = await Category.findOne({ _id: newCategoryId, budget: budget._id });
   
-              if (category) {
+   //           if (category) {
                   // Find the transaction within the category
-                  const transaction = category.transactions.id(transactionId);
+    //              const transaction = category.transactions.id(transactionId);
   
-                  if (transaction) {
+  //                if (transaction) {
                       // Remove the transaction from the current category
-                      category.transactions.pull(transactionId);
-                      await category.save();
+    //                  category.transactions.pull(transactionId);
+      //                await category.save();
   
                       // Update the category for the transaction
-                      transaction.category = newCategoryId;
-                      await transaction.save();
+        //              transaction.category = newCategoryId;
+         //             await transaction.save();
                       
-                      return transaction;
-                  }
-              }
-          }
+           //           return transaction;
+             //     }
+             // }
+        //  }
   
           // If the transaction is not found or cannot be moved
-          throw new UserInputError('Failed to move transaction');
-      } catch (error) {
-          console.error('Error moving transaction:', error);
-          throw new UserInputError('Failed to move transaction');
-      }
-  },
-  
-  
-  
+        //  throw new UserInputError('Failed to move transaction');
+     // } catch (error) {
+       //   console.error('Error moving transaction:', error);
+       //   throw new UserInputError('Failed to move transaction');
+     // }
+  //},
+
     deleteTransaction: async (_, { id }, context) => {
       if (!context.user) {
         throw new AuthenticationError('Authentication required');
       }
-  
       let categoryFound = null;
       let transactionFound = null;
-  
       // Find the category containing the transaction
       const budgets = await Budget.find({ user: context.user._id });
       for (let budget of budgets) {
@@ -289,17 +287,13 @@ const transactionResolvers = {
         }
         if (transactionFound) break;
       }
-  
       if (!transactionFound) {
         throw new UserInputError('Transaction not found or access denied');
       }
-  
       // Remove the transaction from the category
       categoryFound.transactions.pull(id);
-  
       // Save the updated category
       await categoryFound.save();
-  
       return { id: transactionFound._id }; // Return the deleted transaction ID
     },
     },
