@@ -11,6 +11,8 @@ import UpdateBudget from './Components/updateBudget';
 import UserProfilepage from './Components/userProfilepage';
 import userSettings from './Components/userSettings';
 import detailBudget from './Components/detailBudget';
+import Header from './components/header';
+import Footer from './components/footer';
 
 function App() {
 	const [darkMode, setDarkMode] = useState(false);
@@ -31,18 +33,28 @@ function App() {
 				<Route
 					path="/"
 					element={
-						<MainPage darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+						<HomePage darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
 					}
 				/>
-				<Route path="/homepage" element={<HomePage />} /> {/* add this line */}
 				<Route path="/login" element={<Login />} />
 				<Route path="/signup" element={<Signup />} />
-				<Route path="/overviewpage" element={<OverviewPage />} />{' '}
-				{/* render OverviewPage */}
+				<Route path="/overviewpage" element={
+					<div>
+						<Header />
+						<OverviewPage />
+						<Footer />
+					</div>
+				} />
 				<Route path="/updateBudget" element={<UpdateBudget />} />
 				<Route path="/userProfilepage" element={<UserProfilepage />} />
 				<Route path="/userSettings" element={<userSettings />} />
-				<Route path="/detailBudget" element={<detailBudget />} />
+				<Route path="/detailBudget" element={
+					<div>
+						<Header />
+						<detailBudget />
+						<Footer />
+					</div>
+				} />
 			</Routes>
 		</Router>
 	);
