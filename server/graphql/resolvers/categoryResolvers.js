@@ -1,6 +1,6 @@
 const { UserInputError, AuthenticationError } = require('apollo-server-express');
 const { Category } = require('../../models/Category');
-const Budget = require('../../models/Budget');
+const { Budget } = require('../../models/Budget');
 
 const categoryResolvers = {
   Query: {
@@ -87,6 +87,7 @@ const categoryResolvers = {
         throw new UserInputError(error.message);
       }
     },
+    
     deleteCategory: async (_, { id }, context) => {
       if (!context.user) {
         throw new AuthenticationError('Authentication required');
