@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from 'react';
+
 import { Link } from "react-router-dom";
 
 function OverviewPage() {
@@ -22,7 +23,7 @@ function OverviewPage() {
   <span className="bg-black h-0.5 w-full my-1 border border-black border-dashed"></span>
   <span className="bg-black h-0.5 w-full border border-black border-dashed"></span>
 </Link>
-      <Link to="/profile" className="absolute top-0 right-0 m-4 h-12 w-12">
+      <Link to="/userprofilepage" className="absolute top-0 right-0 m-4 h-12 w-12">
         <img
           src="/Profileicon.jpg"
           alt="Profile"
