@@ -174,64 +174,134 @@ const transactionResolvers = {
             throw new UserInputError('Failed to create transaction');
         }
     },
-      updateTransaction: async (_, { id, name, amount, dueDate, payDate, flexible, paid }, context) => {
-        if (!context.user) {
+    updateTransaction: async (_, { id, name, amount, dueDate, payDate, flexible, paid }, context) => {
+      if (!context.user) {
+        throw new AuthenticationError('Authentication required');
+      }
+  
+      let categoryFound = null;
+      let transactionFound = null;
+  
+      // Find the category containing the transaction
+      const budgets = await Budget.find({ user: context.user._id });
+      for (let budget of budgets) {
+        const categories = await Category.find({ budget: budget._id });
+        for (let category of categories) {
+          const transaction = category.transactions.id(id);
+          if (transaction) {
+            transactionFound = transaction;
+            categoryFound = category;
+            break;
+          }
+        }
+        if (transactionFound) break;
+      }
+  
+      if (!transactionFound) {
+        throw new UserInputError('Transaction not found or access denied');
+      }
+  
+      // Update the transaction
+      transactionFound.name = name || transactionFound.name;
+      transactionFound.amount = amount || transactionFound.amount;
+      transactionFound.flexible = flexible !== undefined ? flexible : transactionFound.flexible;
+      transactionFound.paid = paid !== undefined ? paid : transactionFound.paid;
+  
+      if (transactionFound.transactionType === 'expense') {
+        transactionFound.dueDate = dueDate || transactionFound.dueDate;
+      } else if (transactionFound.transactionType === 'income') {
+        transactionFound.payDate = payDate || transactionFound.payDate;
+      }
+  
+      // Save the updated category
+      await categoryFound.save();
+  
+      return {
+        ...transactionFound.toObject(),
+        id: transactionFound._id.toString(),
+        category: {
+          id: categoryFound._id.toString(),
+          name: categoryFound.name,
+        }
+      };
+    },
+  
+    moveTransaction: async (_, { transactionId, newCategoryId }, context) => {
+      if (!context.user) {
           throw new AuthenticationError('Authentication required');
+      }
+  
+      try {
+          // Find the budget first
+          const budgets = await Budget.find({ user: context.user._id });
+  
+          for (let budget of budgets) {
+              // Find the category within the budget
+              const category = await Category.findOne({ _id: newCategoryId, budget: budget._id });
+  
+              if (category) {
+                  // Find the transaction within the category
+                  const transaction = category.transactions.id(transactionId);
+  
+                  if (transaction) {
+                      // Remove the transaction from the current category
+                      category.transactions.pull(transactionId);
+                      await category.save();
+  
+                      // Update the category for the transaction
+                      transaction.category = newCategoryId;
+                      await transaction.save();
+                      
+                      return transaction;
+                  }
+              }
+          }
+  
+          // If the transaction is not found or cannot be moved
+          throw new UserInputError('Failed to move transaction');
+      } catch (error) {
+          console.error('Error moving transaction:', error);
+          throw new UserInputError('Failed to move transaction');
+      }
+  },
+  
+  
+  
+    deleteTransaction: async (_, { id }, context) => {
+      if (!context.user) {
+        throw new AuthenticationError('Authentication required');
+      }
+  
+      let categoryFound = null;
+      let transactionFound = null;
+  
+      // Find the category containing the transaction
+      const budgets = await Budget.find({ user: context.user._id });
+      for (let budget of budgets) {
+        const categories = await Category.find({ budget: budget._id });
+        for (let category of categories) {
+          const transaction = category.transactions.id(id);
+          if (transaction) {
+            transactionFound = transaction;
+            categoryFound = category;
+            break;
+          }
         }
+        if (transactionFound) break;
+      }
   
-        // First, ensure the transaction belongs to the user
-        const transaction = await Transaction.findById(id);
-        if (!transaction || transaction.user.toString() !== context.user._id.toString()) {
-          throw new UserInputError('Transaction not found or access denied');
-        }
+      if (!transactionFound) {
+        throw new UserInputError('Transaction not found or access denied');
+      }
   
-        const updateData = { name, amount, flexible, paid };
-        // Conditionally add fields based on the transaction type
-        if (transaction.transactionType === "expense") {
-          updateData.dueDate = dueDate;
-        } else if (transaction.transactionType === "income") {
-          updateData.payDate = payDate;
-        }
+      // Remove the transaction from the category
+      categoryFound.transactions.pull(id);
   
-        // Remove undefined fields
-        Object.keys(updateData).forEach(key => updateData[key] === undefined && delete updateData[key]);
+      // Save the updated category
+      await categoryFound.save();
   
-        const updatedTransaction = await Transaction.findByIdAndUpdate(id, updateData, { new: true });
-        return updatedTransaction;
-      },
-
-      //Place holder for future feature Move Transactions
-
-      //moveTransaction: async (_, { transactionId, newCategoryId }, context) => {
-      //  if (!context.user) {
-      //    throw new AuthenticationError('Authentication required');
-      //  }
-      //  const transaction = await Transaction.findById(transactionId);
-      //  if (!transaction || transaction.user.toString() !== context.user._id.toString()) {
-      //    throw new UserInputError('Transaction not found or access denied');
-      //  }
-      //  const newCategory = await Category.findById(newCategoryId);
-      //  if (!newCategory || newCategory.user.toString() !== context.user._id.toString()) {
-      //    throw new UserInputError('New category not found or access denied');
-      //  } 
-      //  transaction.category = newCategoryId;
-      //  await transaction.save();
-      //  return transaction;
-      //},
-      
-      deleteTransaction: async (_, { id }, context) => {
-        if (!context.user) {
-          throw new AuthenticationError('Authentication required');
-        }
-  
-        const transaction = await Transaction.findById(id);
-        if (!transaction || transaction.user.toString() !== context.user._id.toString()) {
-          throw new UserInputError('Transaction not found or access denied');
-        }
-  
-        await Transaction.findByIdAndDelete(id);
-        return { id };
-      },
+      return { id: transactionFound._id }; // Return the deleted transaction ID
+    },
     },
   };
   
