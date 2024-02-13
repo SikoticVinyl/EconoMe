@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-function UpdateBudget() {
+function updateBudget() {
 	// Initialize state variables with your actual data
 	const [incomeTotal, setIncomeTotal] = useState(1000);
 	const [expensesTotal, setExpensesTotal] = useState(500);
