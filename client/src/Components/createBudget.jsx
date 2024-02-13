@@ -21,27 +21,39 @@ function CreateBudgetPage() {
   // State to control the display of sections
   const [step, setStep] = useState(1); // Start with step 1 (create budget)
 
+  //To capture budgetID once created and server it to the backend without the user needing to know budget ID. 
+  const [currentBudgetId, setCurrentBudgetId] = useState(null);
+
   // Function for budget creation
   const handleCreateBudget = () => {
-  createBudget({
-    variables: {
-      name: budget, //takes input from budget to create the budget
-    },
-  }).then(response => {
-    console.log('Budget created:', response.data.createBudget);
-    setStep(2); // Allows category creation after budget created to avoid skipping vital data flow. 
-  }).catch(error => {
-    console.error('Error creating budget:', error);
-  });
-};
+    createBudget({
+      variables: { name: budgetName },
+    }).then(response => {
+      const budgetId = response.data.createBudget.id;
+      setCurrentBudgetId(budgetId); // Store the budget ID
+      setStep(2); // Proceed to category creation
+    }).catch(error => {
+      console.error('Error creating budget:', error);
+    });
+  };
+  //Adds state hook to track FlexB based on user input. 
+  const [isFlexible, setIsFlexible] = useState(false);
 
   // Function to handle category creation
   const handleCreateCategory = () => {
-    // Placeholder for mutation call to create category
-    // createCategory({ variables: { category } });
-
-    setStep(3); // Move to next step (add transaction) after category is created
-  };
+  createCategory({
+    variables: {
+      name: categoryName,
+      flexB: isFlexible,
+      budgetId: currentBudgetId,
+    },
+  }).then(response => {
+    console.log('Category created:', response.data.createCategory);
+    setStep(3); // Proceed to transaction creation
+  }).catch(error => {
+    console.error('Error creating category:', error);
+  });
+};
 
   // Function to handle transaction creation
   const handleCreateTransaction = () => {
@@ -70,16 +82,25 @@ function CreateBudgetPage() {
 
         {step === 2 && (
           <div className="mb-4 bg-white rounded shadow-md px-8 pt-6 pb-8">
-            <h2 className="mb-4 text-xl font-bold">Create Category</h2>
+          <h2 className="mb-4 text-xl font-bold">Create Category</h2>
+          <input
+            type="text"
+            placeholder="Category name"
+            value={categoryName}
+            onChange={(e) => setCategoryName(e.target.value)}
+            className="w-full mb-3 px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+          />
+          <label className="inline-flex items-center">
             <input
-              type="text"
-              placeholder="Category name"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="w-full mb-3 px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+              type="checkbox"
+              checked={isFlexible}
+              onChange={(e) => setIsFlexible(e.target.checked)}
+              className="form-checkbox h-5 w-5 text-blue-600"
             />
-            <button onClick={handleCreateCategory} className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Create Category</button>
-          </div>
+            <span className="ml-2 text-gray-700">Flexible</span>
+          </label>
+          <button onClick={handleCreateCategory} className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4">Create Category</button>
+        </div>
         )}
 
         {step === 3 && (
