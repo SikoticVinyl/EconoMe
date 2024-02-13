@@ -42,8 +42,8 @@ function Signup() {
     <div className="min-h-screen flex items-center justify-center bg-[url('/Signupbg.jpg')] bg-cover bg-top py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 bg-white bg-opacity-75 p-10 rounded-lg">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign up
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 font-rubik-doodle">
+            Sign Up
           </h2>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSignup}>
@@ -66,9 +66,9 @@ function Signup() {
               <input id="password" name="password" type="password" required placeholder="Password" value={formData.password} onChange={handleChange} className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
             </div>
           </div>
-          <button type="submit" disabled={loading} className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-            Create Account
-          </button>
+          <button type="submit" disabled={loading} className="w-full px-3 py-2 mt-4 text-white bg-gradient-to-r from-blue-500 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded cursor-pointer active:scale-90 transform transition duration-300 ease-in-out hover:scale-105">
+  Create Account
+</button>
           {error && <p className="mt-2 text-center text-sm text-red-600">Error :( Please try again</p>}
         </form>
       </div>
