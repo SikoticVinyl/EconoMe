@@ -45,10 +45,3 @@ export const DELETE_USER = gql`
     deleteUser(id: $id, confirm: $confirm)
   }
 `;
-
-// Mutation to clear all users and associated data
-export const CLEAR_USERS = gql`
-  mutation ClearUsers {
-    clearUsers
-  }
-`;

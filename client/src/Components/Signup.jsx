@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
-import { CREATE_USER } from '../client-graphql/mutations/createUser';
+import { CREATE_USER } from '../client-graphql/mutations/userMutations';
 
 function Signup() {
 	const [formData, setFormData] = useState({
