@@ -1,5 +1,5 @@
 const { UserInputError, AuthenticationError } = require('apollo-server-express');
-const Budget = require('../../models/Budget');
+const { Budget } = require('../../models/Budget');
 
 const budgetResolvers = {
   Query: {
