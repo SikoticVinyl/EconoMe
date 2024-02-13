@@ -199,25 +199,26 @@ const transactionResolvers = {
         const updatedTransaction = await Transaction.findByIdAndUpdate(id, updateData, { new: true });
         return updatedTransaction;
       },
-      moveTransaction: async (_, { transactionId, newCategoryId }, context) => {
-        if (!context.user) {
-          throw new AuthenticationError('Authentication required');
-        }
-  
-        const transaction = await Transaction.findById(transactionId);
-        if (!transaction || transaction.user.toString() !== context.user._id.toString()) {
-          throw new UserInputError('Transaction not found or access denied');
-        }
-  
-        const newCategory = await Category.findById(newCategoryId);
-        if (!newCategory || newCategory.user.toString() !== context.user._id.toString()) {
-          throw new UserInputError('New category not found or access denied');
-        }
-  
-        transaction.category = newCategoryId;
-        await transaction.save();
-        return transaction;
-      },
+
+      //Place holder for future feature Move Transactions
+
+      //moveTransaction: async (_, { transactionId, newCategoryId }, context) => {
+      //  if (!context.user) {
+      //    throw new AuthenticationError('Authentication required');
+      //  }
+      //  const transaction = await Transaction.findById(transactionId);
+      //  if (!transaction || transaction.user.toString() !== context.user._id.toString()) {
+      //    throw new UserInputError('Transaction not found or access denied');
+      //  }
+      //  const newCategory = await Category.findById(newCategoryId);
+      //  if (!newCategory || newCategory.user.toString() !== context.user._id.toString()) {
+      //    throw new UserInputError('New category not found or access denied');
+      //  } 
+      //  transaction.category = newCategoryId;
+      //  await transaction.save();
+      //  return transaction;
+      //},
+      
       deleteTransaction: async (_, { id }, context) => {
         if (!context.user) {
           throw new AuthenticationError('Authentication required');
