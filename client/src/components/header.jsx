@@ -31,3 +31,12 @@ const Header = () => {
 };
 
 export default Header;
+
+// this is the profile icon that will be used in the header
+{/* <Link to="/userprofilepage" className="absolute top-0 right-0 m-4 h-12 w-12">
+<img
+  src="/Profileicon.jpg"
+  alt="Profile"
+  className="h-full w-full rounded-full object-cover block"
+/>
+</Link> */}
