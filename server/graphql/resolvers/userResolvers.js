@@ -1,161 +1,180 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { UserInputError, AuthenticationError } = require('apollo-server-express');
+const {
+	UserInputError,
+	AuthenticationError
+} = require('apollo-server-express');
 const User = require('../../models/User');
 const Budget = require('../../models/Budget');
 const Category = require('../../models/Category');
 const Transaction = require('../../models/Transaction');
 
 const resolvers = {
-  Query: {
-    users: async() => {
-      try {
-        const users = await User.find();
-        return users;
-      } catch (error) {
-        console.error('Error fetching users:', error);
-        throw new Error('Failed to fetch users');
-      }
-    }
-  },
-  
-  Mutation: {
-    createUser: async (_, { fullName, username, email, password }) => {
-      console.log('Creating user:', { fullName, username, email}, 'Password hidden for security.');
-  
-      const newUser = new User({ fullName, username, email, password });
-  
-      try {
-        await newUser.save();
-        console.log('User created:', newUser);
-  
-        // Return the newUser object with MongoDB's _id as GraphQL's id
-        return {
-          id: newUser._id.toString(),
-          fullName: newUser.fullName,
-          username: newUser.username,
-          email: newUser.email,
-        };
-      } catch (error) {
-        if (error.code === 11000) {
-          throw new UserInputError('Username or email already exists.');
-        }
-  
-        console.error('Error creating user:', error);
-        throw new UserInputError(error.message);
-      }
-    },
+	Query: {
+		users: async () => {
+			try {
+				const users = await User.find();
+				return users;
+			} catch (error) {
+				console.error('Error fetching users:', error);
+				throw new Error('Failed to fetch users');
+			}
+		}
+	},
 
-    loginUser: async (_, { username, password }) => {
-      console.log('Logging in user:', { username});
+	Mutation: {
+		createUser: async (_, { fullName, username, email, password }) => {
+			console.log(
+				'Creating user:',
+				{ fullName, username, email },
+				'Password hidden for security.'
+			);
 
-      const user = await User.findOne({ username }).select('+password');
+			const newUser = new User({ fullName, username, email, password });
 
-      if (!user) {
-        throw new AuthenticationError('User not found');
-      }
+			try {
+				await newUser.save();
+				console.log('User created:', newUser.username);
 
-      const isPasswordValid = await bcrypt.compare(password, user.password);
+				// Generate the token for immediate login
+				const token = jwt.sign(
+					{ id: newUser._id },
+					process.env.JWT_SECRET,
+					{ expiresIn: '1d' }
+				);
 
-      if (!isPasswordValid) {
-        throw new AuthenticationError('Invalid password');
-      }
+				return {
+					token,
+					user: {
+						id: newUser._id.toString(),
+						fullName: newUser.fullName,
+						username: newUser.username,
+						email: newUser.email,
+					},
+				};
+			} catch (error) {
+				if (error.code === 11000) {
+					throw new UserInputError('Username or email already exists.');
+				}
 
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: '1d',
-      });
+				console.error('Error creating user:', error);
+				throw new UserInputError(error.message);
+			}
+		},
 
-      console.log('User logged in:', username );
+		loginUser: async (_, { username, password }) => {
+			console.log('Logging in user:', { username });
 
-      return { token, user };
-    },
+			const user = await User.findOne({ username }).select('+password');
 
-    updateUser: async (_, args, context) => {
-      console.log('Updating user:', args);
+			if (!user) {
+				throw new AuthenticationError('User not found');
+			}
 
-      if (!context.userId) throw new AuthenticationError('You must be logged in');
+			const isPasswordValid = await bcrypt.compare(password, user.password);
 
-      const { id, fullName, username, email, password } = args;
-      const updates = {};
+			if (!isPasswordValid) {
+				throw new AuthenticationError('Invalid password');
+			}
 
-      if (context.userId !== id) throw new AuthenticationError('Unauthorized');
+			const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+				expiresIn: '1d'
+			});
 
-      if (fullName) updates.fullName = fullName;
-      if (username) updates.username = username;
-      if (email) updates.email = email;
-      if (password) {
-        const saltRounds = 10;
-        const hashedPassword = await bcrypt.hash(password, saltRounds);
-        updates.password = hashedPassword;
-      }
+			console.log('User logged in:', username);
 
-      const updatedUser = await User.findByIdAndUpdate(id, updates, { new: true });
+			return { token, user };
+		},
 
-      console.log('User updated:', updatedUser);
+		updateUser: async (_, args, context) => {
+			console.log('Updating user:', args);
 
-      return updatedUser;
-    },
+			if (!context.userId)
+				throw new AuthenticationError('You must be logged in');
 
-    deleteUser: async (_, { id, confirm }, context) => {
-      console.log('Deleting user:', { id, confirm });
+			const { id, fullName, username, email, password } = args;
+			const updates = {};
 
-      // Check for user confirmation
-      if (!confirm) {
-        throw new UserInputError('Deletion must be confirmed');
-      }
+			if (context.userId !== id) throw new AuthenticationError('Unauthorized');
 
-      if (!context.user || context.user._id !== id) {
-        throw new AuthenticationError('Unauthorized or not logged in');
-      }
+			if (fullName) updates.fullName = fullName;
+			if (username) updates.username = username;
+			if (email) updates.email = email;
+			if (password) {
+				const saltRounds = 10;
+				const hashedPassword = await bcrypt.hash(password, saltRounds);
+				updates.password = hashedPassword;
+			}
 
-      try {
-        // Deleting all associated Transactions.
-        await Transaction.deleteMany({ user: id });
+			const updatedUser = await User.findByIdAndUpdate(id, updates, {
+				new: true
+			});
 
-        // Delete all Categories associated with the user's Budgets.
-        const budgets = await Budget.find({ user: id });
-        const budgetIds = budgets.map((budget) => budget._id);
-        await Category.deleteMany({ budget: { $in: budgetIds } });
+			console.log('User updated:', updatedUser);
 
-        // Delete all Budgets owned by the user
-        await Budget.deleteMany({ user: id });
+			return updatedUser;
+		},
 
-        // Delete the User
-        const result = await User.findByIdAndDelete(id);
+		deleteUser: async (_, { id, confirm }, context) => {
+			console.log('Deleting user:', { id, confirm });
 
-        console.log(`User ${id} and all associated data have been deleted.`);
+			// Check for user confirmation
+			if (!confirm) {
+				throw new UserInputError('Deletion must be confirmed');
+			}
 
-        return true;
-      } catch (error) {
-        console.error('Error deleting user:', error);
+			if (!context.user || context.user._id !== id) {
+				throw new AuthenticationError('Unauthorized or not logged in');
+			}
 
-        // Handle errors, should set up for permission issues or user not found.
-        throw error;
-      }
-    },
-    clearUsers: async () => {
-      try {
-        // 1. Delete all Transactions associated with users
-        //await Transaction.deleteMany({ user: { $exists: true } });
-    
-        // 2. Delete all Categories associated with users' Budgets
-        //await Category.deleteMany({ budget: { $exists: true } });
-    
-        // 3. Delete all Budgets owned by users
-        await Budget.deleteMany({ user: { $exists: true } });
-    
-        // 4. Delete all Users
-        await User.deleteMany({});
-    
-        console.log('All users and associated data have been cleared.');
-        
-        return true;
-      } catch (error) {
-        console.error('Error clearing users:', error);
-        return false;
-      }
-    },
-  },
+			try {
+				// Deleting all associated Transactions.
+				await Transaction.deleteMany({ user: id });
+
+				// Delete all Categories associated with the user's Budgets.
+				const budgets = await Budget.find({ user: id });
+				const budgetIds = budgets.map(budget => budget._id);
+				await Category.deleteMany({ budget: { $in: budgetIds } });
+
+				// Delete all Budgets owned by the user
+				await Budget.deleteMany({ user: id });
+
+				// Delete the User
+				const result = await User.findByIdAndDelete(id);
+
+				console.log(`User ${id} and all associated data have been deleted.`);
+
+				return true;
+			} catch (error) {
+				console.error('Error deleting user:', error);
+
+				// Handle errors, should set up for permission issues or user not found.
+				throw error;
+			}
+		},
+		clearUsers: async () => {
+			try {
+				// 1. Delete all Transactions associated with users
+				//await Transaction.deleteMany({ user: { $exists: true } });
+
+				// 2. Delete all Categories associated with users' Budgets
+				//await Category.deleteMany({ budget: { $exists: true } });
+
+				// 3. Delete all Budgets owned by users
+				await Budget.deleteMany({ user: { $exists: true } });
+
+				// 4. Delete all Users
+				await User.deleteMany({});
+
+				console.log('All users and associated data have been cleared.');
+
+				return true;
+			} catch (error) {
+				console.error('Error clearing users:', error);
+				return false;
+			}
+		}
+	}
 };
 
 module.exports = resolvers;

@@ -45,6 +45,5 @@ function OverviewPage() {
       </div>
     </div>
   );
-}
 
 export default OverviewPage;
