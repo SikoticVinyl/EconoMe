@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Nabla&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Nabla&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Nabla&family=Protest+Riot&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Nabla&family=Protest+Riot&family=Sixtyfour&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Nabla&family=Protest+Riot&family=Rubik+Doodle+Shadow&family=Sixtyfour&display=swap');
@@ -6,16 +6,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Vina+Sans&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital@1&family=Vina+Sans&display=swap');
 
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
 @layer utilities {
-    .gradient-text {
-      background: linear-gradient(to right, #184461, #d7d4db);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-  }
+	.gradient-text {
+		background: linear-gradient(to right, #184461, #d7d4db);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+}
