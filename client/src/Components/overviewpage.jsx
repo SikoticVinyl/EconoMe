@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 function OverviewPage() {
+  const [userNum,setUserNum]=useState(0)
   // Replace these with your actual data
   const incomeTotal = 1000;
   const expensesTotal = 500;

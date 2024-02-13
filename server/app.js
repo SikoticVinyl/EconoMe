@@ -16,20 +16,18 @@ async function startServer() {
   app.use(helmet());
 
   const allowedOrigins = [
-    'http://localhost:5173',         // Main frontend domain (vite page rn)
-    'http://localhost:5173/signup',  // Signup page
-    'http://localhost:5173/login',   // Login page
-    // Add each path as created
+    'http://localhost:5173', // Main frontend domain
   ];
-
+  
   app.use(cors({
     origin: function (origin, callback) {
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
+        console.error(`Origin not allowed by CORS: ${origin}`);
         callback(new Error('Not allowed by CORS'));
       }
-    },
+    },    
   }));
 
   app.use(rateLimit({
