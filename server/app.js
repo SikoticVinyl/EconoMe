@@ -10,82 +10,87 @@ const jwt = require('jsonwebtoken');
 const User = require('./models/User');
 
 async function startServer() {
-  console.log('Starting the server...');
+	console.log('Starting the server...');
 
-  const app = express();
-  app.use(helmet());
+	const app = express();
+	app.use(helmet());
 
-  const allowedOrigins = [
-    'http://localhost:5173', // Main frontend domain
-  ];
-  
-  app.use(cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        console.error(`Origin not allowed by CORS: ${origin}`);
-        callback(new Error('Not allowed by CORS'));
-      }
-    },    
-  }));
+	const allowedOrigins = [
+		'http://localhost:5173' // Main frontend domain
+	];
 
-  app.use(rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // limit each IP to 100 requests per windowMs
-  }));
+	app.use(
+		cors({
+			origin: function (origin, callback) {
+				if (!origin || allowedOrigins.includes(origin)) {
+					callback(null, true);
+				} else {
+					console.error(`Origin not allowed by CORS: ${origin}`);
+					callback(new Error('Not allowed by CORS'));
+				}
+			}
+		})
+	);
 
-  app.use(express.json());
+	app.use(
+		rateLimit({
+			windowMs: 15 * 60 * 1000, // 15 minutes
+			max: 100 // limit each IP to 100 requests per windowMs
+		})
+	);
 
-  console.log('Connecting to MongoDB...');
-  console.log('MONGODB_URI:', process.env.MONGODB_URI);
+	app.use(express.json());
 
-  mongoose.connect(process.env.MONGODB_URI)
-    .then(() => console.log('Connected to MongoDB'))
-    .catch(err => console.error('Error connecting to MongoDB:', err));
+	console.log('Connecting to MongoDB...');
+	console.log('MONGODB_URI:', process.env.MONGODB_URI);
 
-  const server = new ApolloServer({
-    schema,
-    context: async ({ req }) => {
-      // Initialize an empty context
-      const context = {
-        req,
-      };
+	mongoose
+		.connect(process.env.MONGODB_URI)
+		.then(() => console.log('Connected to MongoDB'))
+		.catch(err => console.error('Error connecting to MongoDB:', err));
 
-      // Get the token from the Authorization header
-      const authHeader = req.headers.authorization || '';
-      const token = authHeader.split(' ')[1]; // Assumes "Bearer [token]"
+	const server = new ApolloServer({
+		schema,
+		context: async ({ req }) => {
+			// Initialize an empty context
+			const context = {
+				req
+			};
 
-      if (token) {
-        try {
-          // Verify the token
-          const decoded = jwt.verify(token, process.env.JWT_SECRET);
+			// Get the token from the Authorization header
+			const authHeader = req.headers.authorization || '';
+			const token = authHeader.split(' ')[1]; // Assumes "Bearer [token]"
 
-          // Find the user based on the token's payload
-          const user = await User.findById(decoded.id);
+			if (token) {
+				try {
+					// Verify the token
+					const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-          // Add the user to the context if found
-          if (user) {
-            context.user = user;
-          }
-        } catch (err) {
-          console.error('Authentication error:', err);
-        }
-      }
+					// Find the user based on the token's payload
+					const user = await User.findById(decoded.id);
 
-      return context;
-    },
-  });
+					// Add the user to the context if found
+					if (user) {
+						context.user = user;
+					}
+				} catch (err) {
+					console.error('Authentication error:', err);
+				}
+			}
 
-  await server.start();
-  server.applyMiddleware({ app, path: '/graphql' });
+			return context;
+		}
+	});
 
-  const PORT = process.env.PORT;
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-    console.log(`GraphQL path is ${server.graphqlPath}`);
-    console.log('Server started!');
-  });
+	await server.start();
+	server.applyMiddleware({ app, path: '/graphql' });
+
+	const PORT = process.env.PORT;
+	app.listen(PORT, () => {
+		console.log(`Server running on port ${PORT}`);
+		console.log(`GraphQL path is ${server.graphqlPath}`);
+		console.log('Server started!');
+	});
 }
 
 startServer();

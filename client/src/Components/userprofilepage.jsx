@@ -4,25 +4,40 @@ import { Link } from 'react-router-dom';
 
 // const userImage = {userImage}
 
-
 function UserProfilepage() {
-  // Replace these with your actual data
-  
- 
-  return (
-    <div>
-      {/* <img src={userImage} alt="userImage" />; */}
+	// Replace these with your actual data
 
+	return (
+		<div>
+			{/* <img src={userImage} alt="userImage" />; */}
 
-      <div>
-        <h1> First Last</h1>
-      </div>
-      <div>
-      <h2> <button onClick={() => {/* handle navigation */}}>Income</button> </h2>
-      <h2> <button onClick={() => {/* handle navigation */}}>Pay Day</button> </h2>
-      </div>
-      <Link to="/usersettings">User Settings</Link>
-    </div>
-  );
+			<div>
+				<h1> First Last</h1>
+			</div>
+			<div>
+				<h2>
+					{' '}
+					<button
+						onClick={() => {
+							/* handle navigation */
+						}}
+					>
+						Income
+					</button>{' '}
+				</h2>
+				<h2>
+					{' '}
+					<button
+						onClick={() => {
+							/* handle navigation */
+						}}
+					>
+						Pay Day
+					</button>{' '}
+				</h2>
+			</div>
+			<Link to="/usersettings">User Settings</Link>
+		</div>
+	);
 }
 export default UserProfilepage;
