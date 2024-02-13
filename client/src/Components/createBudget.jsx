@@ -5,20 +5,35 @@ import { CREATE_CATEGORY, } from '../client-graphql/mutations/transactionMutatio
 import { CREATE_TRANSACTION, } from '../client-graphql/mutations/transactionMutations';
 
 function CreateBudgetPage() {
+
+    //Hooks for managing form input values
   const [budget, setBudget] = useState('');
   const [category, setCategory] = useState('');
   const [transaction, setTransaction] = useState('');
   const [transactionAmount, setTransactionAmount] = useState('');
 
+  //Hooks for Graphql mutations 
+  const [createBudget, { data: budgetData, loading: budgetLoading, error: budgetError }] = useMutation(CREATE_BUDGET);
+  const [createCategory, { data: categoryData, loading: categoryLoading, error: categoryError }] = useMutation(CREATE_CATEGORY);
+  const [createTransaction, { data: transactionData, loading: transactionLoading, error: transactionError }] = useMutation(CREATE_TRANSACTION);
+
+
   // State to control the display of sections
   const [step, setStep] = useState(1); // Start with step 1 (create budget)
 
-  // Function to handle budget creation
+  // Function for budget creation
   const handleCreateBudget = () => {
-    // createBudget({ variables: { budget } });
-    
-    setStep(2); // Move to next step (create category) after budget is created
-  };
+  createBudget({
+    variables: {
+      name: budget, //takes input from budget to create the budget
+    },
+  }).then(response => {
+    console.log('Budget created:', response.data.createBudget);
+    setStep(2); // Allows category creation after budget created to avoid skipping vital data flow. 
+  }).catch(error => {
+    console.error('Error creating budget:', error);
+  });
+};
 
   // Function to handle category creation
   const handleCreateCategory = () => {
