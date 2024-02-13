@@ -1,33 +1,67 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-function Updatebudget() {
-  // Replace these with your actual data
-  const MyJob = 4500;
-  const SideHustle = 500;
-  const Rent = 1200;
-  const CarPayment = 500;
-  const Food = 300;
-  const leftover = 5;
+
+function UpdateBudget() {
+  // Initialize state variables with your actual data
+  const [incomeTotal, setIncomeTotal] = useState(1000);
+  const [expensesTotal, setExpensesTotal] = useState(500);
+  const [savingsGoals, setSavingsGoals] = useState(200);
+
+  // Calculate profit on the fly based on the current state
+  const profit = incomeTotal - expensesTotal;
+
+  // Handlers to update state based on user input
+  const handleIncomeChange = (event) => {
+    const newValue = event.target.value;
+    if (newValue !== '') {
+      setIncomeTotal(Number(newValue));
+    }
+  };
+
+  const handleExpensesChange = (event) => {
+    const newValue = event.target.value;
+    if (newValue !== '') {
+      setExpensesTotal(Number(newValue));
+    }
+  };
+
+  const handleSavingsGoalsChange = (event) => {
+    const newValue = event.target.value;
+    if (newValue !== '') {
+      setSavingsGoals(Number(newValue));
+    }
+  };
+
   return (
     <div>
-     
       <div>
-        <h1>Income Total</h1>
-        <p>My Job: {MyJob}</p>
-        <p>Side Hustle: {SideHustle}</p>
-
-        <h1> Expenses Total </h1>
-        <p>Rent: {Rent}</p>
-        <p>Car Payment: {CarPayment}</p>
-        <p>Food: {Food}</p>
-
-        <h2> Left over: {leftover}</h2>
+        <button onClick={() => {/* handle navigation */}}>App Navigation</button>
+        <button>
+          <Link to="/profile">Profile</Link>
+        </button>
       </div>
-      <Link to="/overviewpage">Back to Overview</Link>
-      <p>
-      <Link to="/detailBudget">Budget Details</Link>
-      </p>
+      <div>
+        <h1>Overview</h1>
+        <div>
+          <label>Income Total: 
+            <input type="number" value={incomeTotal} onChange={handleIncomeChange} placeholder="Income Total" />
+          </label>
+        </div>
+        <div>
+          <label>Expenses Total: 
+            <input type="number" value={expensesTotal} onChange={handleExpensesChange} placeholder="Expenses Total" />
+          </label>
+        </div>
+        <div>
+          <label>Savings Goals: 
+            <input type="number" value={savingsGoals} onChange={handleSavingsGoalsChange} placeholder="Savings Goals" />
+          </label>
+        </div>
+        <p>Profit: {profit}</p>
+      </div>
+      <Link to="/update-income">Update Income</Link>
     </div>
   );
 }
-export default Updatebudget;
+
+export default updateBudget;
