@@ -1,13 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-// import userImage from './';
+// import userImage from '../assets/userImage';
+
+// const userImage = {userImage}
 
 
 function UserProfilepage() {
   // Replace these with your actual data
+  
  
   return (
     <div>
+      {/* <img src={userImage} alt="userImage" />; */}
 
 
       <div>
