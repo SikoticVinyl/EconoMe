@@ -95,31 +95,31 @@ const transactionResolvers = {
     }
     return await transactionServices.getTotalIncome(context.user.id);
   },
-      totalExpenses: async (_, __, context) => {
-        if (!context.user) {
+  totalExpenses: async (_, __, context) => {
+    if (!context.user) {
+      throw new AuthenticationError('Authentication required');
+    }
+    return await transactionServices.getTotalExpenses(context.user._id);
+  },
+      // Future Feature
+      //totalSavings: async (_, __, context) => {
+      //  if (!context.user) {
+      //    throw new AuthenticationError('Authentication required');
+      //  }
+      //  return await transactionServices.getTotalSavings(context.user._id);
+      //},
+  totalFlexibleExpenses: async (_, __, context) => {
+  if (!context.user) {
+    throw new AuthenticationError('Authentication required');
+  }
+  return await transactionServices.getTotalFlexibleExpenses(context.user._id);
+}
+},
+  Mutation: {
+    createTransaction: async (_, { name, amount, transactionType, dueDate, payDate, flexible, categoryId }, context) => {
+      if (!context.user) {
           throw new AuthenticationError('Authentication required');
-        }
-        return await transactionServices.getTotalExpenses(context.user._id);
-      },
-      totalSavings: async (_, __, context) => {
-        if (!context.user) {
-          throw new AuthenticationError('Authentication required');
-        }
-        return await transactionServices.getTotalSavings(context.user._id);
-      },
-      totalFlexibleExpenses: async (_, __, context) => {
-        if (!context.user) {
-          throw new AuthenticationError('Authentication required');
-        }
-        return await transactionServices.getTotalFlexibleExpenses(context.user._id);
       }
-    },
-    Mutation: {
-      createTransaction: async (_, { name, amount, transactionType, dueDate, payDate, flexible, categoryId }, context) => {
-        if (!context.user) {
-            throw new AuthenticationError('Authentication required');
-        }
-    
         // Initialize a base transaction object with common fields
         const transactionData = {
             name,
