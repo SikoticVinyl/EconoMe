@@ -5,55 +5,67 @@ import { CREATE_CATEGORY, } from '../client-graphql/mutations/transactionMutatio
 import { CREATE_TRANSACTION, } from '../client-graphql/mutations/transactionMutations';
 
 function CreateBudgetPage() {
+// State hooks for managing form input values
+const [budgetName, setBudgetName] = useState('');
+const [categoryName, setCategoryName] = useState('');
+const [isFlexible, setIsFlexible] = useState(false);
+const [transactionName, setTransactionName] = useState('');
+const [transactionAmount, setTransactionAmount] = useState('');
+const [selectedCategoryId, setSelectedCategoryId] = useState('');
 
-    //Hooks for managing form input values
-  const [budget, setBudget] = useState('');
-  const [category, setCategory] = useState('');
-  const [transaction, setTransaction] = useState('');
-  const [transactionAmount, setTransactionAmount] = useState('');
+// State hooks for application flow
+const [currentBudgetId, setCurrentBudgetId] = useState(null);
+const [createdCategories, setCreatedCategories] = useState([]);
+const [showCreateAnotherCategory, setShowCreateAnotherCategory] = useState(false);
+const [step, setStep] = useState(1);
 
-  //Hooks for Graphql mutations 
-  const [createBudget, { data: budgetData, loading: budgetLoading, error: budgetError }] = useMutation(CREATE_BUDGET);
-  const [createCategory, { data: categoryData, loading: categoryLoading, error: categoryError }] = useMutation(CREATE_CATEGORY);
-  const [createTransaction, { data: transactionData, loading: transactionLoading, error: transactionError }] = useMutation(CREATE_TRANSACTION);
+// Mutation hooks
+const [createBudget] = useMutation(CREATE_BUDGET);
+const [createCategory] = useMutation(CREATE_CATEGORY);
+const [createTransaction] = useMutation(CREATE_TRANSACTION);
 
-
-  // State to control the display of sections
-  const [step, setStep] = useState(1); // Start with step 1 (create budget)
-
-  //To capture budgetID once created and server it to the backend without the user needing to know budget ID. 
-  const [currentBudgetId, setCurrentBudgetId] = useState(null);
-
-  // Function for budget creation
-  const handleCreateBudget = () => {
+// Function for budget creation
+const handleCreateBudget = () => {
     createBudget({
-      variables: { name: budgetName },
+        variables: { name: budgetName },
     }).then(response => {
-      const budgetId = response.data.createBudget.id;
-      setCurrentBudgetId(budgetId); // Store the budget ID
-      setStep(2); // Proceed to category creation
+        const budgetId = response.data.createBudget.id;
+        setCurrentBudgetId(budgetId); // Store the budget ID
+        setStep(2); // Proceed to category creation
     }).catch(error => {
-      console.error('Error creating budget:', error);
+        console.error('Error creating budget:', error);
     });
-  };
-  //Adds state hook to track FlexB based on user input. 
-  const [isFlexible, setIsFlexible] = useState(false);
-
+};
+  
   // Function to handle category creation
   const handleCreateCategory = () => {
-  createCategory({
-    variables: {
-      name: categoryName,
-      flexB: isFlexible,
-      budgetId: currentBudgetId,
-    },
-  }).then(response => {
-    console.log('Category created:', response.data.createCategory);
-    setStep(3); // Proceed to transaction creation
-  }).catch(error => {
-    console.error('Error creating category:', error);
-  });
-};
+    createCategory({
+      variables: {
+        name: categoryName,
+        flexB: isFlexible,
+        budgetId: currentBudgetId,
+      },
+    })
+      .then(response => {
+        const newCategory = response.data.createCategory;
+        setCreatedCategories(prev => [...prev, { id: newCategory.id, name: newCategory.name }]);
+        setShowCreateAnotherCategory(true); // Show prompt for creating another category
+      })
+      .catch(error => console.error('Error creating category:', error));
+  };
+
+  const handleUserDecision = (createAnother) => {
+    if (createAnother) {
+      // If yes, reset fields for a new category creation
+      setShowCreateAnotherCategory(false);
+      setCategoryName('');
+      setIsFlexible(false);
+    } else {
+      // If no, proceed to transaction creation and keep the option to add more categories
+      setShowCreateAnotherCategory(false);
+      setStep(3); // Move to transaction creation step
+    }
+  };
 
   // Function to handle transaction creation
   const handleCreateTransaction = () => {
@@ -102,27 +114,44 @@ function CreateBudgetPage() {
           <button onClick={handleCreateCategory} className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4">Create Category</button>
         </div>
         )}
+        {/* Prompt for creating another category */}
+        {showCreateAnotherCategory && (
+          <div>
+            <p>Category created successfully. Do you want to create another?</p>
+            <button onClick={() => handleUserDecision(true)}>Yes</button>
+            <button onClick={() => handleUserDecision(false)}>No</button>
+          </div>
+        )}
 
         {step === 3 && (
           <div className="bg-white rounded shadow-md px-8 pt-6 pb-8">
-            <h2 className="mb-4 text-xl font-bold">Add Transaction</h2>
-            <input
-              type="text"
-              placeholder="Transaction name"
-              value={transaction}
-              onChange={(e) => setTransaction(e.target.value)}
-              className="w-full mb-3 px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-            />
-            <input
-              type="number"
-              placeholder="Amount"
-              value={transactionAmount}
-              onChange={(e) => setTransactionAmount(e.target.value)}
-              className="w-full mb-3 px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-            />
-            {/* Include category selection if multiple categories are allowed */}
-            <button onClick={handleCreateTransaction} className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Add Transaction</button>
-          </div>
+          <h2 className="mb-4 text-xl font-bold">Add Transaction</h2>
+          <input
+            type="text"
+            placeholder="Transaction name"
+            value={transactionName}
+            onChange={(e) => setTransactionName(e.target.value)}
+            className="w-full mb-3 px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+          />
+          <input
+            type="number"
+            placeholder="Amount"
+            value={transactionAmount}
+            onChange={(e) => setTransactionAmount(e.target.value)}
+            className="w-full mb-3 px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+          />
+          {/* Category Selection Dropdown */}
+          <select
+            onChange={(e) => setSelectedCategoryId(e.target.value)}
+            className="w-full mb-3 px-3 py-2 border rounded shadow appearance-none text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          >
+            <option value="">Select Category</option>
+            {createdCategories.map((category) => (
+              <option key={category.id} value={category.id}>{category.name}</option>
+            ))}
+          </select>
+          <button onClick={handleCreateTransaction} className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Add Transaction</button>
+        </div>        
         )}
       </div>
     </div>
