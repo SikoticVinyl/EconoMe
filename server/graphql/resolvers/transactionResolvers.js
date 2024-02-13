@@ -1,29 +1,105 @@
 const { UserInputError, AuthenticationError } = require('apollo-server-express');
-const Transaction = require('../../models/Transaction');
+const { Budget } = require('../../models/Budget');
+const { Transaction } = require('../../models/Transaction');
 const { Category } = require('../../models/Category');
 const transactionServices = require('../../services/transactionService');
 
 const transactionResolvers = {
-    Query: {
-      transaction: async (_, { id }, context) => {
-        if (!context.user) {
+  Query: {
+    // Fetch a single transaction by its ID requires searching through all categories
+    transaction: async (_, { id }, context) => {
+      if (!context.user) {
           throw new AuthenticationError('Authentication required');
-        }
+      }
   
-        const transaction = await Transaction.findById(id);
-        if (!transaction || transaction.user.toString() !== context.user._id.toString()) {
+      // console.log(`Fetching transaction by ID: ${id} for user ID: ${context.user._id}`);
+  
+      let transactionFound = null;
+      let categoryFound = null;
+  
+      const budgets = await Budget.find({ user: context.user._id });
+      /* console.log(`Found ${budgets.length} budgets for the user.`); */
+  
+      for (let budget of budgets) {
+          const categories = await Category.find({ budget: budget._id });
+          // console.log(`Found ${categories.length} categories in budget ID: ${budget._id}`);
+  
+          // Search for the transaction in each category
+          for (let category of categories) {
+              const transaction = category.transactions.id(id);
+              if (transaction) {
+                  console.log(`Transaction found in category: ${category.name}`);
+                  transactionFound = transaction;
+                  categoryFound = category;
+                  break;
+              }
+          }
+  
+          if (transactionFound) break;
+      }
+  
+      if (!transactionFound) {
+          console.log("Transaction not found or access denied.");
           throw new UserInputError('Transaction not found or access denied');
-        }
-        return transaction;
-      },
-      transactions: async (_, __, context) => {
-        if (!context.user) {
-          throw new AuthenticationError('Authentication required');
-        }
+      }
   
-        const transactions = await Transaction.find({ user: context.user._id });
-        return transactions;
-      },
+      return {
+          ...transactionFound.toObject(),
+          id: transactionFound._id.toString(),
+          category: {
+              id: categoryFound._id.toString(),
+              name: categoryFound.name,
+          }
+      };
+  },
+    // Fetch all transactions for the user
+    transactions: async (_, __, context) => {
+      if (!context.user) {
+          console.log("Authentication Error: User is not authenticated.");
+          throw new AuthenticationError('Authentication required');
+      }
+  
+      console.log(`Fetching budgets for user ID: ${context.user._id}`);
+      
+      // Fetch budgets for the user
+      const budgets = await Budget.find({ user: context.user._id });
+      console.log(`Found ${budgets.length} budgets for the user.`);
+  
+      if (budgets.length === 0) {
+          console.log("No budgets found for this user.");
+          return [];
+      }
+  
+      let allTransactions = [];
+      for (let budget of budgets) {
+          console.log(`Fetching categories for budget ID: ${budget._id}`);
+  
+          const categories = await Category.find({ budget: budget._id });
+          console.log(`Found ${categories.length} categories in budget ID: ${budget._id}`);
+  
+          for (let category of categories) {
+              console.log(`Processing ${category.transactions.length} transactions in category: ${category.name}`);
+  
+              let transactions = category.transactions.map(transaction => {
+                  const transactionObject = {
+                      ...transaction.toObject(),
+                      id: transaction._id.toString(), // Conversion to string for GraphQL compatibility
+                      category: {
+                          id: category._id.toString(),
+                          name: category.name,
+                      }
+                  };
+                  console.log(`Transaction: ${transactionObject.id}, Amount: ${transactionObject.amount}`);
+                  return transactionObject;
+              });
+  
+              allTransactions = allTransactions.concat(transactions);
+          }
+      }
+  
+      console.log(`Total transactions found for user ${context.user._id}: ${allTransactions.length}`);
+      return allTransactions;
+  },
       totalIncome: async (_, __, context) => {
         if (!context.user) {
           throw new AuthenticationError('Authentication required');
@@ -54,7 +130,7 @@ const transactionResolvers = {
         if (!context.user) {
             throw new AuthenticationError('Authentication required');
         }
-
+    
         // Initialize a base transaction object with common fields
         const transactionData = {
             name,
@@ -63,7 +139,7 @@ const transactionResolvers = {
             user: context.user.id,
             paid: false
         };
-
+    
         // Adjust fields based on the transaction type
         if (transactionType === "expense") {
             transactionData.dueDate = dueDate;
@@ -71,20 +147,20 @@ const transactionResolvers = {
         } else if (transactionType === "income") {
             transactionData.payDate = payDate;
         }
-
+    
         try {
             // Find the category and update it with the new transaction
             const category = await Category.findById(categoryId);
             if (!category || (category.user && category.user.toString() !== context.user.id)) {
                 throw new UserInputError('Category not found or access denied');
             }
-
+    
             // Since transactions are embedded, we push the new transaction data directly
             category.transactions.push(transactionData);
-
+    
             // Save the updated category
             await category.save();
-
+    
             // MongoDB/Mongoose uses _id, but GraphQL expects an id field
             // Manually constructing the transaction object to include an id field
             const createdTransaction = category.transactions[category.transactions.length - 1];
@@ -103,7 +179,7 @@ const transactionResolvers = {
                     name: category.name
                 }
             };
-
+    
         } catch (error) {
             console.error('Error creating transaction:', error);
             throw new UserInputError('Failed to create transaction');
