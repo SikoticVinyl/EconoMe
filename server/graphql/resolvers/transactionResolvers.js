@@ -24,26 +24,23 @@ const transactionResolvers = {
           const categories = await Category.find({ budget: budget._id });
           // console.log(`Found ${categories.length} categories in budget ID: ${budget._id}`);
   
-          // Search for the transaction in each category
+          //Search for the transaction in each category
           for (let category of categories) {
-              const transaction = category.transactions.id(id);
-              if (transaction) {
-                  console.log(`Transaction found in category: ${category.name}`);
-                  transactionFound = transaction;
-                  categoryFound = category;
-                  break;
+            const transaction = category.transactions.id(id);
+            if (transaction) {
+                console.log(`Transaction found in category: ${category.name}`);
+                transactionFound = transaction;
+                categoryFound = category;
+                break;
               }
+            }
+            if (transactionFound) break;
           }
-  
-          if (transactionFound) break;
-      }
-  
-      if (!transactionFound) {
-          console.log("Transaction not found or access denied.");
+          if (!transactionFound) {
+          //console.log("Transaction not found or access denied.");
           throw new UserInputError('Transaction not found or access denied');
-      }
-  
-      return {
+        }
+        return {
           ...transactionFound.toObject(),
           id: transactionFound._id.toString(),
           category: {
@@ -52,34 +49,27 @@ const transactionResolvers = {
           }
       };
   },
-    // Fetch all transactions for the user
-    transactions: async (_, __, context) => {
-      if (!context.user) {
-          console.log("Authentication Error: User is not authenticated.");
-          throw new AuthenticationError('Authentication required');
-      }
-  
-      console.log(`Fetching budgets for user ID: ${context.user._id}`);
-      
-      // Fetch budgets for the user
-      const budgets = await Budget.find({ user: context.user._id });
-      console.log(`Found ${budgets.length} budgets for the user.`);
-  
+  // Fetch all transactions for the user
+  transactions: async (_, __, context) => {
+    if (!context.user) {
+        //console.log("Authentication Error: User is not authenticated.");
+        throw new AuthenticationError('Authentication required');
+    }
+    //console.log(`Fetching budgets for user ID: ${context.user._id}`);
+    // Fetch budgets for the user
+    const budgets = await Budget.find({ user: context.user._id });
+    //  console.log(`Found ${budgets.length} budgets for the user.`);
       if (budgets.length === 0) {
           console.log("No budgets found for this user.");
           return [];
       }
-  
       let allTransactions = [];
       for (let budget of budgets) {
-          console.log(`Fetching categories for budget ID: ${budget._id}`);
-  
+          //console.log(`Fetching categories for budget ID: ${budget._id}`);
           const categories = await Category.find({ budget: budget._id });
-          console.log(`Found ${categories.length} categories in budget ID: ${budget._id}`);
-  
+          //console.log(`Found ${categories.length} categories in budget ID: ${budget._id}`);
           for (let category of categories) {
-              console.log(`Processing ${category.transactions.length} transactions in category: ${category.name}`);
-  
+              //console.log(`Processing ${category.transactions.length} transactions in category: ${category.name}`);
               let transactions = category.transactions.map(transaction => {
                   const transactionObject = {
                       ...transaction.toObject(),
@@ -89,23 +79,22 @@ const transactionResolvers = {
                           name: category.name,
                       }
                   };
-                  console.log(`Transaction: ${transactionObject.id}, Amount: ${transactionObject.amount}`);
+                  //console.log(`Transaction: ${transactionObject.id}, Amount: ${transactionObject.amount}`);
                   return transactionObject;
               });
   
               allTransactions = allTransactions.concat(transactions);
           }
       }
-  
-      console.log(`Total transactions found for user ${context.user._id}: ${allTransactions.length}`);
+      //console.log(`Total transactions found for user ${context.user._id}: ${allTransactions.length}`);
       return allTransactions;
   },
-      totalIncome: async (_, __, context) => {
-        if (!context.user) {
-          throw new AuthenticationError('Authentication required');
-        }
-        return await transactionServices.getTotalIncome(context.user._id);
-      },
+  totalIncome: async (_, __, context) => {
+    if (!context.user) {
+      throw new AuthenticationError('Authentication required');
+    }
+    return await transactionServices.getTotalIncome(context.user.id);
+  },
       totalExpenses: async (_, __, context) => {
         if (!context.user) {
           throw new AuthenticationError('Authentication required');
