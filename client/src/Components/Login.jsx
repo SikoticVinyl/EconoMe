@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { LOGIN_USER } from '../client-graphql/queries/login';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loginUser] = useMutation(LOGIN_USER);
+  const navigate = useNavigate(); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,21 +20,13 @@ function Login() {
         },
       });
 
-      console.log('Data sent to server:', { username, password });
+      console.log('Data sent to server:', { username });
       
       if (data && data.loginUser && data.loginUser.token) {
-        // You have a valid token here, you can store it in localStorage or a cookie
         const token = data.loginUser.token;
-
-        // Log the token
         console.log('Token received from server:', token);
-
-        // You can now redirect the user to a protected route or perform other actions
-        //Token in localStorage:
         localStorage.setItem('token', token);
-
-        // Redirect the user to a protected page:
-        // history.push('/dashboard');
+        navigate('/overviewpage');
       }
     } catch (error) {
       console.error('Login error:', error);
