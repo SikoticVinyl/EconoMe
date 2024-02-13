@@ -5,6 +5,7 @@ import '../index.css';
 import nightModeIcon from '../assets/nightmode-svgrepo-com.svg';
 
 function MainPage({}) {
+  
 	return (
 		<div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-green-400 to-blue-500 text-gray-900">
 			<div className="fixed top-0 right-0 m-4 sm:m-6 md:m-8 lg:m-10 xl:m-12">

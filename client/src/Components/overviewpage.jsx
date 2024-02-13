@@ -1,56 +1,49 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 function OverviewPage() {
-	const [userNum, setUserNum] = useState(0);
-	// Replace these with your actual data
-	const incomeTotal = 1000;
-	const expensesTotal = 500;
-	const savingsGoals = 200;
-	const profit = incomeTotal - expensesTotal;
+  const [incomeTotal, setIncomeTotal] = useState(1000);
+  const [expensesTotal, setExpensesTotal] = useState(500);
+  const [savingsGoals, setSavingsGoals] = useState(200);
+  const profit = incomeTotal - expensesTotal;
 
-	return (
-		<div
-			className="flex flex-col h-screen justify-center items-center relative"
-			style={{
-				backgroundImage: `url(/Overviewpage1.jpg)`,
-				backgroundSize: 'cover'
-			}}
-		>
-			<Link
-				to="/your-desired-path"
-				className="absolute top-0 left-0 m-4 h-12 w-12 flex flex-col justify-center items-center border-2 border-black shadow-md border-dashed rounded bg-gradient-to-r from-green-200 to-green-400 px-1"
-			>
-				<span className="bg-black h-0.5 w-full border border-black border-dashed"></span>
-				<span className="bg-black h-0.5 w-full my-1 border border-black border-dashed"></span>
-				<span className="bg-black h-0.5 w-full border border-black border-dashed"></span>
-			</Link>
-			<Link to="/profile" className="absolute top-0 right-0 m-4 h-12 w-12">
-				<img
-					src="/Profileicon.jpg"
-					alt="Profile"
-					className="h-full w-full rounded-full object-cover block"
-				/>
-			</Link>
-			<div className="flex flex-col h-screen justify-center items-center">
-				<div className="text-center">
-					<h1 className="text-4xl mb-4">Overview</h1>
-					<p className="text-xl">Income Total: {incomeTotal}</p>
-					<p className="text-xl">Expenses Total: {expensesTotal}</p>
-					<p className="text-xl">Savings Goals: {savingsGoals}</p>
-					<p className="text-xl">Profit: {profit}</p>
-				</div>
-			</div>
-			<div className="mb-20">
-				<Link
-					className="p-4 text-2xl bg-green-500 text-white rounded"
-					to="/update-income"
-				>
-					Update Income
-				</Link>
-			</div>
-		</div>
-	);
-}
+  const handleIncomeChange = (e) => setIncomeTotal(e.target.value);
+  const handleExpensesChange = (e) => setExpensesTotal(e.target.value);
+  const handleSavingsGoalsChange = (e) => setSavingsGoals(e.target.value);
+  return (
+    <div
+      className="flex flex-col h-screen justify-center items-center relative"
+      style={{
+        backgroundImage: `url(/Overviewpage1.jpg)`,
+        backgroundSize: "cover",
+      }}
+    >
+      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <h1 className="mb-6 text-xl font-bold">Overview</h1>
+        <div className="mb-6 flex justify-between items-center space-x-4">
+          <label className="text-gray-700 text-sm font-bold mb-2 w-1/3">Income Total:</label>
+          <input type="number" value={incomeTotal} onChange={handleIncomeChange} placeholder="Income Total" className="shadow appearance-none border rounded w-1/2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+        </div>
+        <div className="mb-6 flex justify-between items-center space-x-4">
+          <label className="text-gray-700 text-sm font-bold mb-2 w-1/3">Expenses Total:</label>
+          <input type="number" value={expensesTotal} onChange={handleExpensesChange} placeholder="Expenses Total" className="shadow appearance-none border rounded w-1/2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+        </div>
+        <div className="mb-6 flex justify-between items-center space-x-4">
+          <label className="text-gray-700 text-sm font-bold mb-2 w-1/3">Savings Goals:</label>
+          <input type="number" value={savingsGoals} onChange={handleSavingsGoalsChange} placeholder="Savings Goals" className="shadow appearance-none border rounded w-1/2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+        </div>
+        <p className="mb-6 text-gray-700 text-base">Profit: {profit}</p>
+      </div>
+      <Link to="/update-income" className="mb-6 inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">Update Income</Link>
+      <div className="mb-20">
+        <Link
+          className="p-4 text-2xl bg-green-500 text-white rounded"
+          to="/updateBudget"
+        >
+          Update Budget
+        </Link>
+      </div>
+    </div>
+  );
 
 export default OverviewPage;
