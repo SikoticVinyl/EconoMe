@@ -22,6 +22,8 @@ function UserProfilepage() {
       <h2> <button onClick={() => {/* handle navigation */}}>Pay Day</button> </h2>
       </div>
       <Link to="/usersettings">User Settings</Link>
+      <Link to="/Homepage">User Settings</Link>
+
     </div>
   );
 }

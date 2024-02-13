@@ -7,6 +7,8 @@ function OverviewPage() {
   const expensesTotal = 500;
   const savingsGoals = 200;
   const profit = incomeTotal - expensesTotal;
+  
+
   return (
     <div>
       <div>
@@ -29,6 +31,7 @@ function OverviewPage() {
   <option value={savingsGoals}>Savings Goals</option>
   <option value={profit}>Profit</option>
 </select>
+
 </h2>
 
 <h2>${userNum}</h2>
