@@ -64,4 +64,4 @@ function UpdateBudget() {
   );
 }
 
-export default updateBudget;
+export default UpdateBudget;

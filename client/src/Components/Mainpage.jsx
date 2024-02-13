@@ -55,7 +55,7 @@ function MainPage({}) {
             />
           </svg>
           <Link to="/homepage" className="mb-4">
-            <button className="w-full px-3 py-2 mt-1 text-white bg-gradient-to-r from-blue-500 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded cursor-pointer active:scale-90 transform transition duration-300 ease-in-out hover:scale-105 border border-black">
+            <button className="w-full px-3 py-2 mt-4 text-white bg-gradient-to-r from-blue-500 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded cursor-pointer active:scale-90 transform transition duration-300 ease-in-out hover:scale-105 border border-black">
               Lets get started
             </button>
           </Link>
