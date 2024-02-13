@@ -20,7 +20,7 @@ const userSchema = gql`
 			username: String!
 			email: String!
 			password: String!
-		): User
+		  ): AuthPayload
 		loginUser(username: String!, password: String!): AuthPayload
 		updateUser(
 			id: ID!
