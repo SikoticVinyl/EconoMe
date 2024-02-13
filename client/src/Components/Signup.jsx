@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { CREATE_USER } from '../client-graphql/mutations/userMutations';
+import { useNavigate } from 'react-router-dom';
 
 function Signup() {
 	const [formData, setFormData] = useState({
@@ -10,6 +11,7 @@ function Signup() {
 		password: ''
 	});
 	const [createUser, { loading, error }] = useMutation(CREATE_USER);
+	const navigate = useNavigate();
 
 	const handleChange = e => {
 		const { name, value } = e.target;
@@ -28,9 +30,9 @@ function Signup() {
 			});
 
 			if (data && data.createUser && data.createUser.token) {
-				// User creation was successful.
-				// Handle success here, redirecting to a login page.
 				console.log('User created successfully:', data.createUser.user);
+                localStorage.setItem('token', data.createUser.token); // Save the token to local storage
+                navigate('/overviewpage');
 			}
 		} catch (error) {
 			console.error('Signup error:', error);

@@ -34,14 +34,23 @@ const resolvers = {
 
 			try {
 				await newUser.save();
-				console.log('User created:', newUser);
+				console.log('User created:', newUser.username);
 
-				// Return the newUser object with MongoDB's _id as GraphQL's id
+				// Generate the token for immediate login
+				const token = jwt.sign(
+					{ id: newUser._id },
+					process.env.JWT_SECRET,
+					{ expiresIn: '1d' }
+				);
+
 				return {
-					id: newUser._id.toString(),
-					fullName: newUser.fullName,
-					username: newUser.username,
-					email: newUser.email
+					token,
+					user: {
+						id: newUser._id.toString(),
+						fullName: newUser.fullName,
+						username: newUser.username,
+						email: newUser.email,
+					},
 				};
 			} catch (error) {
 				if (error.code === 11000) {
