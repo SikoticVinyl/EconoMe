@@ -4,8 +4,8 @@ import Login from './Components/Login';
 import Signup from './Components/Signup';
 import HomePage from './Components/HomePage';
 import './index.css';
-import OverviewPage from './Components/OverviewPage';
-import UpdateBudget from './Components/updateBudget';
+import OverviewPage from './Components/overviewpage';
+import CreateBudget from './Components/createBudget';
 import UserProfilepage from './Components/userProfilepage';
 import userSettings from './Components/usersettings';
 import detailBudget from './Components/detailBudget';
@@ -44,7 +44,7 @@ function App() {
 						<Footer />
 					</div>
 				} />
-				<Route path="/updateBudget" element={<UpdateBudget />} />
+				<Route path="/createBudget" element={<CreateBudget />} />
 				<Route path="/userProfilepage" element={<UserProfilepage />} />
 				<Route path="/userSettings" element={<userSettings />} />
 				<Route path="/detailBudget" element={
@@ -54,10 +54,6 @@ function App() {
 						<Footer />
 					</div>
 				} />
-        <Route path="/updateBudget" element={<UpdateBudget />} />
-        <Route path="/userProfilepage" element={<UserProfilepage />} />
-        <Route path="/userSettings" element={<userSettings />} />
-        <Route path="/detailBudget" element={<detailBudget />} />
       </Routes>
     </Router>
   );
