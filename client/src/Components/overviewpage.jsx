@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
-import { Link } from "react-router-dom";
-
+import { useQuery, gql } from '@apollo/client';
+import { GET_TOTAL_INCOME, GET_TOTAL_EXPENSES, GET_TOTAL_FLEXIBLE_EXPENSES } from '../client-graphql/queries/transactionQueries';
 function OverviewPage() {
-  const [incomeTotal, setIncomeTotal] = useState(1000);
-  const [expensesTotal, setExpensesTotal] = useState(500);
-  const [savingsGoals, setSavingsGoals] = useState(200);
-  const profit = incomeTotal - expensesTotal;
+  // State for the static savings goal
+  const [savingsGoal, setSavingsGoal] = useState('');
 
-  const handleIncomeChange = (e) => setIncomeTotal(e.target.value);
-  const handleExpensesChange = (e) => setExpensesTotal(e.target.value);
-  const handleSavingsGoalsChange = (e) => setSavingsGoals(e.target.value);
+  // GraphQL queries
+  const { data: incomeData, loading: incomeLoading } = useQuery(GET_TOTAL_INCOME);
+  const { data: expensesData, loading: expensesLoading } = useQuery(GET_TOTAL_EXPENSES);
+  const { data: flexibleExpensesData, loading: flexibleExpensesLoading } = useQuery(GET_TOTAL_FLEXIBLE_EXPENSES);
+
+  // Check if data is loading
+  if (incomeLoading || expensesLoading || flexibleExpensesLoading) return <p>Loading...</p>;
+
   return (
     <div
       className="flex flex-col h-screen justify-center items-center relative"
@@ -20,30 +23,24 @@ function OverviewPage() {
     >
       <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <h1 className="mb-6 text-xl font-bold">Overview</h1>
-        <div className="mb-6 flex justify-between items-center space-x-4">
-          <label className="text-gray-700 text-sm font-bold mb-2 w-1/3">Income Total:</label>
-          <input type="number" value={incomeTotal} onChange={handleIncomeChange} placeholder="Income Total" className="shadow appearance-none border rounded w-1/2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+        <p className="mb-4">Total Income: {incomeData.totalIncome}</p>
+        <p className="mb-4">Total Expenses: {expensesData.totalExpenses}</p>
+        <p className="mb-4">Total Flexible Expenses: {flexibleExpensesData.totalFlexibleExpenses}</p>
+        <div className="mb-6">
+          <label htmlFor="savingsGoal" className="block text-sm font-bold mb-2">Savings Goal:</label>
+          <input
+            type="number"
+            id="savingsGoal"
+            value={savingsGoal}
+            onChange={(e) => setSavingsGoal(e.target.value)}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            placeholder="Enter your savings goal"
+          />
         </div>
-        <div className="mb-6 flex justify-between items-center space-x-4">
-          <label className="text-gray-700 text-sm font-bold mb-2 w-1/3">Expenses Total:</label>
-          <input type="number" value={expensesTotal} onChange={handleExpensesChange} placeholder="Expenses Total" className="shadow appearance-none border rounded w-1/2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
-        </div>
-        <div className="mb-6 flex justify-between items-center space-x-4">
-          <label className="text-gray-700 text-sm font-bold mb-2 w-1/3">Savings Goals:</label>
-          <input type="number" value={savingsGoals} onChange={handleSavingsGoalsChange} placeholder="Savings Goals" className="shadow appearance-none border rounded w-1/2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
-        </div>
-        <p className="mb-6 text-gray-700 text-base">Profit: {profit}</p>
-      </div>
-      <Link to="/update-income" className="mb-6 inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">Update Income</Link>
-      <div className="mb-20">
-        <Link
-          className="p-4 text-2xl bg-green-500 text-white rounded"
-          to="/updateBudget"
-        >
-          Update Budget
-        </Link>
+        {/* Placeholder for dropdown and category details - implement based on your specific needs */}
       </div>
     </div>
   );
+}
 
 export default OverviewPage;

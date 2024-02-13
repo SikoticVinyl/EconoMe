@@ -7,7 +7,7 @@ import './index.css';
 import OverviewPage from './Components/OverviewPage';
 import UpdateBudget from './Components/updateBudget';
 import UserProfilepage from './Components/userProfilepage';
-import userSettings from './Components/userSettings';
+import userSettings from './Components/usersettings';
 import detailBudget from './Components/detailBudget';
 import Header from './components/header';
 import Footer from './components/footer';
