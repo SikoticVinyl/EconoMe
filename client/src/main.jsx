@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import App from './App.jsx';
 import './index.css';
@@ -11,7 +11,9 @@ const client = new ApolloClient({
 });
 
 // Render the App component wrapped with ApolloProvider using createRoot
-ReactDOM.createRoot(document.getElementById('root')).render(
+const container = document.getElementById('root'); // Get the root container
+const root = createRoot(container); // Use createRoot for React 18
+root.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
       <App />

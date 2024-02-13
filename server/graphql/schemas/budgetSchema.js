@@ -5,7 +5,6 @@ const budgetSchema = gql`
         id: ID!
         user: User!
         name: String!
-        date: String!
         categories: [Category]
     }
 
@@ -15,17 +14,13 @@ const budgetSchema = gql`
     }
 
     extend type Mutation {
-        createBudget(
-            name: String!
-            date: String!
-        ): Budget
+        createBudget(name: String!): Budget
         updateBudget(
-            id:ID!
+            id: ID!
             name: String
-            date: String
         ): Budget
-        deleteBudget(id:ID!): Budget
+        deleteBudget(id: ID!): Budget
     }
-    `;
+`;
 
 module.exports = budgetSchema;

@@ -1,75 +1,83 @@
-
 const { UserInputError, AuthenticationError } = require('apollo-server-express');
 const Transaction = require('../../models/Transaction');
 const Category = require('../../models/Category');
+const transactionServices = require('../../services/transactionService');
 
 const transactionResolvers = {
-  Query: {
-    transaction: async (_, { id }, context) => {
-      if (!context.user) {
-        throw new AuthenticationError('Authentication required');
-      }
-
-      try {
-        const transaction = await Transaction.findById(id);
-        if (!transaction) {
-          throw new UserInputError('Transaction not found');
-        }
-        return transaction;
-      } catch (error) {
-        throw new UserInputError(error.message);
-      }
-    },
-    transactions: async (_, __, context) => {
-      if (!context.user) {
-        throw new AuthenticationError('Authentication required');
-      }
-
-      try {
-        const transactions = await Transaction.find({ user: context.user.id });
-        return transactions;
-      } catch (error) {
-        throw new UserInputError(error.message);
-      }
-    },
-  },
-  Mutation: {
-    createTransaction: async (_, { name, amount, transactionType, dueDate, payDate, flexible, paid, categoryId }, context) => {
+    Query: {
+      transaction: async (_, { id }, context) => {
         if (!context.user) {
           throw new AuthenticationError('Authentication required');
         }
-      
+  
+        const transaction = await Transaction.findById(id);
+        if (!transaction || transaction.user.toString() !== context.user._id.toString()) {
+          throw new UserInputError('Transaction not found or access denied');
+        }
+        return transaction;
+      },
+      transactions: async (_, __, context) => {
+        if (!context.user) {
+          throw new AuthenticationError('Authentication required');
+        }
+  
+        const transactions = await Transaction.find({ user: context.user._id });
+        return transactions;
+      },
+      totalIncome: async (_, __, context) => {
+        if (!context.user) {
+          throw new AuthenticationError('Authentication required');
+        }
+        return await transactionServices.getTotalIncome(context.user._id);
+      },
+      totalExpenses: async (_, __, context) => {
+        if (!context.user) {
+          throw new AuthenticationError('Authentication required');
+        }
+        return await transactionServices.getTotalExpenses(context.user._id);
+      },
+      totalSavings: async (_, __, context) => {
+        if (!context.user) {
+          throw new AuthenticationError('Authentication required');
+        }
+        return await transactionServices.getTotalSavings(context.user._id);
+      },
+      totalFlexibleExpenses: async (_, __, context) => {
+        if (!context.user) {
+          throw new AuthenticationError('Authentication required');
+        }
+        return await transactionServices.getTotalFlexibleExpenses(context.user._id);
+      }
+    },
+    Mutation: {
+    createTransaction: async (_, { name, amount, transactionType, dueDate, payDate, flexible, categoryId }, context) => {
+        if (!context.user) {
+          throw new AuthenticationError('Authentication required');
+        }
         // Ensure the category exists and belongs to the user
         const category = await Category.findById(categoryId);
         if (!category || category.user.toString() !== context.user.id) {
           throw new UserInputError('Category not found or access denied');
         }
-      
-        // Initialize a base transaction object
+        // Initialize a base transaction object with common fields
         const transactionData = {
           name,
           amount,
           transactionType,
           category: categoryId,
-          // Default values for optional fields
-          dueDate: null,
-          payDate: null,
-          flexible: false,
-          paid: false,
+          user: context.user._id,
+          paid: false
         };
-      
-        // Conditionally add fields based on the transaction type
-        if (transactionType === "TypeA") {
+        // Adjust fields based on the transaction type
+        if (transactionType === "expense") {
           transactionData.dueDate = dueDate;
-          transactionData.flexible = flexible;
-        } else if (transactionType === "TypeB") {
+          transactionData.flexible = flexible ?? false; // Use provided value or default to false
+        } else if (transactionType === "income") {
           transactionData.payDate = payDate;
-          transactionData.paid = paid;
+          // For income, 'flexible' is not applicable, and 'paid' defaults to false
         }
-      
-        // Create the transaction with conditional fields
+        // Create and save the transaction
         const newTransaction = new Transaction(transactionData);
-      
         try {
           await newTransaction.save();
           return newTransaction;
@@ -78,68 +86,65 @@ const transactionResolvers = {
           throw new UserInputError(error.message);
         }
       },
-      
-    updateTransaction: async (_, { id, name, amount, dueDate, payDate, flexible, paid }, context) => {
-      if (!context.user) {
-        throw new AuthenticationError('Authentication required');
-      }
 
-      const updateData = { name, amount, dueDate, payDate, flexible, paid };
-
-      // Remove undefined fields
-      Object.keys(updateData).forEach(key => updateData[key] === undefined && delete updateData[key]);
-
-      try {
+      updateTransaction: async (_, { id, name, amount, dueDate, payDate, flexible, paid }, context) => {
+        if (!context.user) {
+          throw new AuthenticationError('Authentication required');
+        }
+  
+        // First, ensure the transaction belongs to the user
+        const transaction = await Transaction.findById(id);
+        if (!transaction || transaction.user.toString() !== context.user._id.toString()) {
+          throw new UserInputError('Transaction not found or access denied');
+        }
+  
+        const updateData = { name, amount, flexible, paid };
+        // Conditionally add fields based on the transaction type
+        if (transaction.transactionType === "expense") {
+          updateData.dueDate = dueDate;
+        } else if (transaction.transactionType === "income") {
+          updateData.payDate = payDate;
+        }
+  
+        // Remove undefined fields
+        Object.keys(updateData).forEach(key => updateData[key] === undefined && delete updateData[key]);
+  
         const updatedTransaction = await Transaction.findByIdAndUpdate(id, updateData, { new: true });
-        if (!updatedTransaction) {
-          throw new UserInputError('Transaction not found');
-        }
         return updatedTransaction;
-      } catch (error) {
-        throw new UserInputError(error.message);
-      }
-    },
-    moveTransaction: async (_, { transactionId, newCategoryId }, context) => {
-      if (!context.user) {
-        throw new AuthenticationError('Authentication required');
-      }
-
-      // Validate the new category
-      const newCategory = await Category.findById(newCategoryId);
-      if (!newCategory || newCategory.user.toString() !== context.user.id) {
-        throw new UserInputError('New category not found or access denied');
-      }
-
-      try {
-        const movedTransaction = await Transaction.findByIdAndUpdate(
-          transactionId,
-          { category: newCategoryId },
-          { new: true }
-        );
-        if (!movedTransaction) {
-          throw new UserInputError('Transaction not found');
+      },
+      moveTransaction: async (_, { transactionId, newCategoryId }, context) => {
+        if (!context.user) {
+          throw new AuthenticationError('Authentication required');
         }
-        return movedTransaction;
-      } catch (error) {
-        throw new UserInputError(error.message);
-      }
-    },
-    deleteTransaction: async (_, { id }, context) => {
-      if (!context.user) {
-        throw new AuthenticationError('Authentication required');
-      }
-
-      try {
-        const deletedTransaction = await Transaction.findByIdAndDelete(id);
-        if (!deletedTransaction) {
-          throw new UserInputError('Transaction not found');
+  
+        const transaction = await Transaction.findById(transactionId);
+        if (!transaction || transaction.user.toString() !== context.user._id.toString()) {
+          throw new UserInputError('Transaction not found or access denied');
         }
-        return deletedTransaction;
-      } catch (error) {
-        throw new UserInputError(error.message);
-      }
+  
+        const newCategory = await Category.findById(newCategoryId);
+        if (!newCategory || newCategory.user.toString() !== context.user._id.toString()) {
+          throw new UserInputError('New category not found or access denied');
+        }
+  
+        transaction.category = newCategoryId;
+        await transaction.save();
+        return transaction;
+      },
+      deleteTransaction: async (_, { id }, context) => {
+        if (!context.user) {
+          throw new AuthenticationError('Authentication required');
+        }
+  
+        const transaction = await Transaction.findById(id);
+        if (!transaction || transaction.user.toString() !== context.user._id.toString()) {
+          throw new UserInputError('Transaction not found or access denied');
+        }
+  
+        await Transaction.findByIdAndDelete(id);
+        return { id };
+      },
     },
-  },
-};
-
-module.exports = transactionResolvers;
+  };
+  
+  module.exports = transactionResolvers;
