@@ -12,7 +12,7 @@ const transactionSchema = new mongoose.Schema({
 	transactionType: {
 		type: String,
 		required: true,
-		enum: ['expense', 'income'] // Restrict to these two values
+		enum: ['Expense', 'Income'] // Restrict to these two values
 	},
 	dueDate: {
 		type: Date,

@@ -92,24 +92,24 @@ const handleUserDecision = (createAnother) => {
         name: transactionName,
         amount: parseFloat(transactionAmount),
         transactionType,
-        dueDate: transactionType === 'Expense' ? dueDate : null,
-        payDate: transactionType === 'Income' ? payDate : null,
-        flexible: transactionType === 'Expense' ? isFlexible : null,
-        paid: isPaid,
+        dueDate: transactionType === 'expense' ? dueDate : null,
+        payDate: transactionType === 'income' ? payDate : null,
+        flexible: transactionType === 'expense' ? isFlexible : null,
+        paid: transactionType === 'expense' ? isPaid : null,
         categoryId: selectedCategoryId,
       },
     })
-      .then(() => {
+      .then((result) => {
+        // Handle success, maybe show a confirmation message
         setShowTransactionConfirmation(true);
       })
       .catch(error => console.error('Error adding transaction:', error));
   };
-
   const handleTransactionDecision = (createAnother) => {
     if (createAnother) {
       resetTransactionForm();
     } else {
-      navigate('/overviewpage');
+      navigate('/overview-page');
     }
   };
 
@@ -120,7 +120,6 @@ const handleUserDecision = (createAnother) => {
     setDueDate('');
     setPayDate('');
     setIsFlexible(false);
-    setIsPaid(false);
     setSelectedCategoryId('');
     setShowTransactionConfirmation(false);
   };
