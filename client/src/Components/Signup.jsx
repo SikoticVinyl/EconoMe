@@ -32,7 +32,7 @@ function Signup() {
 			if (data && data.createUser && data.createUser.token) {
 				console.log('User created successfully:', data.createUser.user);
                 localStorage.setItem('token', data.createUser.token); // Save the token to local storage
-                navigate('/overviewpage');
+                navigate('/create-budget');
 			}
 		} catch (error) {
 			console.error('Signup error:', error);
