@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, gql } from '@apollo/client';
 import { CREATE_BUDGET } from '../client-graphql/mutations/budgetMutations';
-import { CREATE_CATEGORY } from '../client-graphql/mutations/transactionMutations';
+import { CREATE_CATEGORY } from '../client-graphql/mutations/categoriesMutations';
 import { CREATE_TRANSACTION } from '../client-graphql/mutations/transactionMutations';
 
 function CreateBudgetPage() {
