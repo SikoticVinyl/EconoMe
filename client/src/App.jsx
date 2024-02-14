@@ -36,22 +36,22 @@ function App() {
 					/>
 					<Route path="/login" element={<Login />} />
 					<Route path="/signup" element={<Signup />} />
-					<Route
-						path="/overview-page"
-						element={
-							<div className="flex flex-col h-screen w-full overflow-hidden">
-								<div className="w-full overflow-hidden">
-									<Header />
-								</div>
-								<div className="flex-grow w-full overflow-hidden">
-									<OverviewPage />
-								</div>
-								<div className="w-full overflow-hidden">
-									<Footer />
-								</div>
-							</div>
-						}
-					/>
+          <Route
+  path="/overview-page"
+  element={
+    <div className="flex flex-col h-screen w-full overflow-hidden">
+      <div className="min-w-full overflow-hidden">
+        <Header />
+      </div>
+      <div className="flex-grow min-w-full overflow-hidden">
+        <OverviewPage />
+      </div>
+      <div className="min-w-full overflow-hidden">
+        <Footer />
+      </div>
+    </div>
+  }
+/>
 					<Route path="/create-budget" element={<CreateBudget />} />
 					<Route path="/user-profile-page" element={<UserProfilePage />} />
 					<Route path="/user-settings" element={<UserSettings />} />
