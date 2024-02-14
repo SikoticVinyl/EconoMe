@@ -10,10 +10,6 @@ import {
 function UpdateBudget() {
 	// State for the static savings goal
 	const [newSavingsGoal, setNewSavingsGoal] = useState('');
-	const [isIncomeCollapsed, setIsIncomeCollapsed] = useState(true);
-	const [isExpensesCollapsed, setIsExpensesCollapsed] = useState(true);
-	const [isFlexibleExpensesCollapsed, setIsFlexibleExpensesCollapsed] =
-		useState(true);
 	const [submittedSavingsGoal, setSubmittedSavingsGoal] = useState('');
 
 	// GraphQL queries
@@ -54,16 +50,15 @@ function UpdateBudget() {
 		return <p>Loading...</p>;
 	}
 
-	// Extract total income, expenses, and flexible expenses
+	// Extract total income, expenses, flexible expenses
 	const totalIncome = incomeData?.totalIncome || 0;
 	const totalExpenses = expensesData?.totalExpenses || 0;
-	const totalFlexibleExpenses =
-		flexibleExpensesData?.totalFlexibleExpenses || 0;
+	const totalFlexibleExpenses = flexibleExpensesData?.totalFlexibleExpenses || 0;
 
 	// Extract transactions
 	const transactions = transactionsData?.transactions || [];
 
-	// Filter transactions by income, expenses, and flexible expenses
+	// Filter transactions by income, expenses, flexible expenses
 	const incomeTransactions = transactions.filter(
 		transaction => transaction.transactionType === 'INCOME'
 	);
@@ -75,72 +70,74 @@ function UpdateBudget() {
 	);
 
 	return (
-		<div
-			className="flex flex-col h-screen justify-center items-center relative"
-			style={{
-				backgroundImage: `url(/Moneybg.jpg)`,
-				backgroundSize: '100% 100%'
-			}}
-		>
-			<div
-				className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-				style={{
-					backgroundImage: `url(/Wood.jpg)`, // Change the image URL here
-					backgroundSize: '100% 100%'
-				}}
-			>
+		<div className="flex flex-col h-screen justify-center items-center relative">
+			<div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
 				<h1 className="mb-6 text-4xl font-bold font-rubik-doodle">Overview</h1>
-				{/* Other sections */}
+				{/* Total Income section */}
 				<div className="mb-4">
-					{/* Total Income section */}
 					<div className="flex items-center justify-between cursor-pointer">
-						<span className="text-lg font-bold ml-2 ">
-							Total Income: 
+						<span className="text-lg font-bold ml-2">
+							Total Income:
 						</span>
-                        <span className="text-right px-2 rounded text-lg font-bold ml-2 w-20">
-                            {totalIncome}
-                        </span>
+						<span className="text-right px-2 rounded text-lg font-bold ml-2 w-20">
+							{totalIncome}
+						</span>
 					</div>
-                    <div className="flex items-center justify-between cursor-pointer">
-                        <span className="text-lg ml-2 pl-2">
-							Paycheck:
-						</span>
-                        <input placeholder={totalExpenses} className="text-right px-2 rounded text-lg font-bold ml-2 w-20"/>
-                    </div>
+					{/* Render income transactions */}
+					{incomeTransactions.map((transaction, index) => (
+						<div key={index} className="flex items-center justify-between cursor-pointer">
+							<span className="text-lg ml-2 pl-2">
+								{transaction.name}:
+							</span>
+							<span className="text-right px-2 rounded text-lg font-bold ml-2 w-20">
+								{transaction.amount}
+							</span>
+						</div>
+					))}
 				</div>
+				{/* Total Expenses section */}
 				<div className="mb-4">
-					{/* Total Expenses section */}
 					<div className="flex items-center justify-between cursor-pointer">
-						<span className="text-lg font-bold ml-2 ">
+						<span className="text-lg font-bold ml-2">
 							Total Expense:
 						</span>
-                        <span className="text-right px-2 rounded text-lg font-bold ml-2 w-20">
-                            {totalExpenses}
-                        </span>
-					</div>
-                    <div className="flex items-center justify-between cursor-pointer">
-                        <span className="text-lg ml-2 pl-2">
-							Rent:
+						<span className="text-right px-2 rounded text-lg font-bold ml-2 w-20">
+							{totalExpenses}
 						</span>
-                        <input placeholder={totalExpenses} className="text-right px-2 rounded text-lg font-bold ml-2 w-20"/>
-                    </div>
+					</div>
+					{/* Render expense transactions */}
+					{expenseTransactions.map((transaction, index) => (
+						<div key={index} className="flex items-center justify-between cursor-pointer">
+							<span className="text-lg ml-2 pl-2">
+								{transaction.name}:
+							</span>
+							<span className="text-right px-2 rounded text-lg font-bold ml-2 w-20">
+								{transaction.amount}
+							</span>
+						</div>
+					))}
 				</div>
+				{/* Total Flexible Expenses section */}
 				<div className="mb-4">
-					{/* Total Expenses section */}
 					<div className="flex items-center justify-between cursor-pointer">
-						<span className="text-lg font-bold ml-2 ">
-                            Total Flexible Expenses:
+						<span className="text-lg font-bold ml-2">
+							Total Flexible Expenses:
 						</span>
-                        <span className="text-right px-2 rounded text-lg font-bold ml-2 w-20">
-                            {totalFlexibleExpenses}
-                        </span>
+						<span className="text-right px-2 rounded text-lg font-bold ml-2 w-20">
+							{totalFlexibleExpenses}
+						</span>
 					</div>
-                    <div className="flex items-center justify-between cursor-pointer">
-                        <span className="text-lg ml-2 pl-2">
-							Rent:
-						</span>
-                        <input placeholder={totalExpenses} className="text-right px-2 rounded text-lg font-bold ml-2 w-20"/>
-                    </div>
+					{/* Render flexible expense transactions */}
+					{flexibleExpenseTransactions.map((transaction, index) => (
+						<div key={index} className="flex items-center justify-between cursor-pointer">
+							<span className="text-lg ml-2 pl-2">
+								{transaction.name}:
+							</span>
+							<span className="text-right px-2 rounded text-lg font-bold ml-2 w-20">
+								{transaction.amount}
+							</span>
+						</div>
+					))}
 				</div>
 				{/* Savings Goal form */}
 				<div className="mb-6">
@@ -170,3 +167,4 @@ function UpdateBudget() {
 }
 
 export default UpdateBudget;
+
