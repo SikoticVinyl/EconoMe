@@ -4,38 +4,42 @@ const mongoose = require('mongoose');
 
 // Helper function to fetch user's budget IDs
 async function fetchUserBudgetIds(userId) {
-	const budgets = await Budget.find(
-		{ user: new mongoose.Types.ObjectId(userId) },
-		'_id'
-	);
-	return budgets.map(budget => budget._id);
+    const budgets = await Budget.find(
+        { user: new mongoose.Types.ObjectId(userId) },
+        '_id'
+    );
+    console.log('Fetched budget IDs:', budgets.map(budget => budget._id));
+    return budgets.map(budget => budget._id);
 }
 
 // Generalized aggregation function for transactions
 async function aggregateTransactions(userId, transactionType, flexible) {
-	const budgetIds = await fetchUserBudgetIds(userId);
-	const match = {
-		'transactions.transactionType': transactionType
-	};
-	if (flexible !== undefined) {
-		match['transactions.flexible'] = flexible;
-	}
+    console.log('Aggregating transactions:', { userId, transactionType, flexible });
+    const budgetIds = await fetchUserBudgetIds(userId);
+    console.log('Budget IDs:', budgetIds);
+    const match = {
+        'transactions.transactionType': transactionType
+    };
+    if (flexible !== undefined) {
+        match['transactions.flexible'] = flexible;
+    }
 
-	const categories = await Category.aggregate([
-		{ $match: { budget: { $in: budgetIds } } },
-		{ $unwind: '$transactions' },
-		{ $match: match },
-		{ $group: { _id: null, total: { $sum: '$transactions.amount' } } }
-	]);
+    const categories = await Category.aggregate([
+        { $match: { budget: { $in: budgetIds } } },
+        { $unwind: '$transactions' },
+        { $match: match },
+        { $group: { _id: null, total: { $sum: '$transactions.amount' } } }
+    ]);
+    console.log('Aggregated categories:', categories);
 
-	return categories[0] ? categories[0].total : 0;
+    return categories[0] ? categories[0].total : 0;
 }
 
 async function aggregateTransactionsByCategory(userId, transactionType) {
-    // Ensure transactionType is capitalized to match your schema enum values
-    const capitalizedTransactionType = transactionType.charAt(0).toUpperCase() + transactionType.slice(1);
-
+    console.log('Aggregating transactions by category:', { userId, transactionType });
+    
     const budgetIds = await fetchUserBudgetIds(userId);
+    console.log('Budget IDs:', budgetIds);
     
     const aggregationPipeline = [
         {
@@ -45,13 +49,13 @@ async function aggregateTransactionsByCategory(userId, transactionType) {
             }
         },
         {
-            // Unwind the transactions array to process each transaction individually
+            // Unwind the transactions array to access individual transactions
             $unwind: '$transactions'
         },
         {
-            // Further filter transactions by the specified type (Income or Expenses)
+            // Filter transactions by the specified transaction type
             $match: {
-                'transactions.transactionType': capitalizedTransactionType
+                'transactions.transactionType': transactionType
             }
         },
         {
@@ -72,23 +76,33 @@ async function aggregateTransactionsByCategory(userId, transactionType) {
             }
         }
     ];
+    console.log('Aggregation pipeline:', aggregationPipeline);
 
     const categoriesWithTransactions = await Category.aggregate(aggregationPipeline);
+    console.log('Categories with transactions:', categoriesWithTransactions);
+
     return categoriesWithTransactions;
 }
 
+
 // Exported service functions
 exports.getTotalIncome = async userId =>
-	aggregateTransactions(userId, 'income');
+    aggregateTransactions(userId, 'income');
 exports.getTotalExpenses = async userId =>
-	aggregateTransactions(userId, 'expense');
+    aggregateTransactions(userId, 'expense');
 exports.getTotalSavings = async userId =>
-	aggregateTransactions(userId, 'savings');
+    aggregateTransactions(userId, 'savings');
 exports.getTotalFlexibleExpenses = async userId =>
-	aggregateTransactions(userId, 'expense', true);
+    aggregateTransactions(userId, 'expense', true);
 exports.getTotalIncomeByCategory = async (userId) => {
-		return aggregateTransactionsByCategory(userId, 'income');
-	};
+    console.log('Fetching total income by category for user:', userId);
+    const categoriesWithTransactions = await aggregateTransactionsByCategory(userId, 'income');
+    console.log('Total income by category:', categoriesWithTransactions);
+    return categoriesWithTransactions;
+};
 exports.getTotalExpensesByCategory = async (userId) => {
-		return aggregateTransactionsByCategory(userId, 'expense');
-	};
+    console.log('Fetching total expenses by category for user:', userId);
+    const categoriesWithTransactions = await aggregateTransactionsByCategory(userId, 'expense');
+    console.log('Total expenses by category:', categoriesWithTransactions);
+    return categoriesWithTransactions;
+};
