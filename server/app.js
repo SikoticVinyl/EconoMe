@@ -18,7 +18,8 @@ async function startServer() {
 	app.set('trust proxy', 1);
 
 	const allowedOrigins = [
-		'http://localhost:5173' // Main frontend domain
+		'http://localhost:5173',
+		'https://econome-rqta.onrender.com'
 	];
 
 	app.use(
