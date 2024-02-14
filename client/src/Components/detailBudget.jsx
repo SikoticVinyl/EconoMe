@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 // import userImage from './';
 
-function detailBudget() {
+function DetailBudget() {
 	// Replace these with your actual data
 
 	return (
@@ -36,4 +36,4 @@ function detailBudget() {
 		</div>
 	);
 }
-export default detailBudget;
+export default DetailBudget;

@@ -32,19 +32,18 @@ function Signup() {
 			if (data && data.createUser && data.createUser.token) {
 				console.log('User created successfully:', data.createUser.user);
                 localStorage.setItem('token', data.createUser.token); // Save the token to local storage
-                navigate('/overviewpage');
+                navigate('/create-budget');
 			}
 		} catch (error) {
 			console.error('Signup error:', error);
 		}
 	};
-
 	// Render the signup form
 	return (
 		<div className="min-h-screen flex items-center justify-center bg-[url('/Signupbg.jpg')] bg-cover bg-top py-12 px-4 sm:px-6 lg:px-8">
 			<div className="max-w-md w-full space-y-8 bg-white bg-opacity-75 p-10 rounded-lg">
 				<div>
-					<h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+					<h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 font-rubik-doodle">
 						Sign up
 					</h2>
 				</div>

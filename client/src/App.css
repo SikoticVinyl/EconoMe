@@ -3,7 +3,6 @@
 #root {
 	max-width: 1280px;
 	margin: 0 auto;
-	padding: 2rem;
 	text-align: center;
 }
 
@@ -35,10 +34,6 @@
 	}
 }
 
-.card {
-	padding: 2em;
-}
-
 .read-the-docs {
 	color: #888;
 }
@@ -46,3 +41,24 @@
 .dropdown:hover .dropdown-menu {
 	display: block;
 }
+
+html, body {
+	margin: 0;
+	padding: 0;
+  }
+
+.home-page-container {
+  }
+  
+  .home-page-content {
+	/* Add styles for the content area */
+  }
+  
+  .home-page-title {
+	/* Add styles for the title */
+  }
+  
+  .home-page-button {
+	/* Add styles for the buttons */
+  }
+  

@@ -26,7 +26,7 @@ function Login() {
 				const token = data.loginUser.token;
 				console.log('Token received from server:', token);
 				localStorage.setItem('token', token);
-				navigate('/overviewpage');
+				navigate('/overview-page');
 			}
 		} catch (error) {
 			console.error('Login error:', error);

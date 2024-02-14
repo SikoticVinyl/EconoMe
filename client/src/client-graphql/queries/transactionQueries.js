@@ -1,3 +1,5 @@
+import { gql } from '@apollo/client';
+
 // Query to fetch all transactions
 export const GET_TRANSACTIONS = gql`
   query GetTransactions {
