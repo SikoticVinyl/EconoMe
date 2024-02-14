@@ -1,49 +1,111 @@
 import React, { useState } from 'react';
-import { Link } from "react-router-dom";
+import { useQuery } from '@apollo/client';
+import { GET_TOTAL_INCOME, GET_TOTAL_EXPENSES, GET_TOTAL_FLEXIBLE_EXPENSES, GET_TRANSACTIONS } from '../client-graphql/queries/transactionQueries';
 
 function OverviewPage() {
-  const [incomeTotal, setIncomeTotal] = useState(1000);
-  const [expensesTotal, setExpensesTotal] = useState(500);
-  const [savingsGoals, setSavingsGoals] = useState(200);
-  const profit = incomeTotal - expensesTotal;
+  // State for the static savings goal
+  const [newSavingsGoal, setNewSavingsGoal] = useState('');
+  const [isIncomeCollapsed, setIsIncomeCollapsed] = useState(true);
+  const [isExpensesCollapsed, setIsExpensesCollapsed] = useState(true);
+  const [isFlexibleExpensesCollapsed, setIsFlexibleExpensesCollapsed] = useState(true);
+  const [submittedSavingsGoal, setSubmittedSavingsGoal] = useState('');
 
-  const handleIncomeChange = (e) => setIncomeTotal(e.target.value);
-  const handleExpensesChange = (e) => setExpensesTotal(e.target.value);
-  const handleSavingsGoalsChange = (e) => setSavingsGoals(e.target.value);
+  // GraphQL queries
+  const { data: incomeData, loading: incomeLoading, error: incomeError } = useQuery(GET_TOTAL_INCOME);
+  const { data: expensesData, loading: expensesLoading, error: expensesError } = useQuery(GET_TOTAL_EXPENSES);
+  const { data: flexibleExpensesData, loading: flexibleExpensesLoading, error: flexibleExpensesError } = useQuery(GET_TOTAL_FLEXIBLE_EXPENSES);
+  const { data: transactionsData, loading: transactionsLoading, error: transactionsError } = useQuery(GET_TRANSACTIONS);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Update the submittedSavingsGoal state with the newSavingsGoal value
+    setSubmittedSavingsGoal(newSavingsGoal);
+  };
+
+  // Check if data is loading
+  if (incomeLoading || expensesLoading || flexibleExpensesLoading || transactionsLoading) {
+    return <p>Loading...</p>;
+  }
+
+  // Extract total income, expenses, and flexible expenses
+  const totalIncome = incomeData?.totalIncome || 0;
+  const totalExpenses = expensesData?.totalExpenses || 0;
+  const totalFlexibleExpenses = flexibleExpensesData?.totalFlexibleExpenses || 0;
+
+  // Extract transactions
+  const transactions = transactionsData?.transactions || [];
+
+  // Filter transactions by income, expenses, and flexible expenses
+  const incomeTransactions = transactions.filter(transaction => transaction.transactionType === 'INCOME');
+  const expenseTransactions = transactions.filter(transaction => transaction.transactionType === 'EXPENSE');
+  const flexibleExpenseTransactions = transactions.filter(transaction => transaction.transactionType === 'FLEXIBLE_EXPENSE');
+
   return (
-    <div
-      className="flex flex-col h-screen justify-center items-center relative"
-      style={{
-        backgroundImage: `url(/Moneybg.jpg)`,
-        backgroundSize: "cover",
-      }}
-    >
-      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" style={{ backgroundImage: `url(/Wood.jpg)`, backgroundSize: "cover" }}>
-        <h1 className="mb-6 text-5xl font-bold font-rubik-doodle text-center">Overview</h1>
-        <div className="mb-6 flex justify-between items-center space-x-4">
-          <label className="text-gray-700 text-sm font-bold mb-2 w-1/3">Income Total:</label>
-          <input type="number" value={incomeTotal} onChange={handleIncomeChange} placeholder="Income Total" className="shadow appearance-none border rounded w-1/2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+    <div className="flex flex-col h-screen justify-center items-center relative" style={{backgroundImage: `url(/Overviewpage1.jpg)`, backgroundSize: "cover"}}>
+      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <h1 className="mb-6 text-xl font-bold">Overview</h1>
+        {/* Other sections */}
+        <div className="mb-4">
+          {/* Total Income section */}
+          <div className="flex items-center cursor-pointer" onClick={() => setIsIncomeCollapsed(!isIncomeCollapsed)}>
+            <span style={{color: 'black'}}>{isIncomeCollapsed ? '▶' : '▼'}</span>
+            <span className="text-sm font-bold ml-2">Total Income: {totalIncome}</span>
+          </div>
+          {!isIncomeCollapsed && (
+            <ul className="list-disc ml-6">
+              {incomeTransactions.map((transaction, index) => (
+                <li key={index}>{transaction.name}: {transaction.amount}</li>
+              ))}
+            </ul>
+          )}
         </div>
-        <div className="mb-6 flex justify-between items-center space-x-4">
-          <label className="text-gray-700 text-sm font-bold mb-2 w-1/3">Expenses Total:</label>
-          <input type="number" value={expensesTotal} onChange={handleExpensesChange} placeholder="Expenses Total" className="shadow appearance-none border rounded w-1/2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+        <div className="mb-4">
+          {/* Total Expenses section */}
+          <div className="flex items-center cursor-pointer" onClick={() => setIsExpensesCollapsed(!isExpensesCollapsed)}>
+            <span style={{color: 'black'}}>{isExpensesCollapsed ? '▶' : '▼'}</span>
+            <span className="text-sm font-bold ml-2">Total Expenses: {totalExpenses}</span>
+          </div>
+          {!isExpensesCollapsed && (
+            <ul className="list-disc ml-6">
+              {expenseTransactions.map((transaction, index) => (
+                <li key={index}>{transaction.name}: {transaction.amount}</li>
+              ))}
+            </ul>
+          )}
         </div>
-        <div className="mb-6 flex justify-between items-center space-x-4">
-          <label className="text-gray-700 text-sm font-bold mb-2 w-1/3">Savings Goals:</label>
-          <input type="number" value={savingsGoals} onChange={handleSavingsGoalsChange} placeholder="Savings Goals" className="shadow appearance-none border rounded w-1/2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+        <div className="mb-4">
+          {/* Total Flexible Expenses section */}
+          <div className="flex items-center cursor-pointer" onClick={() => setIsFlexibleExpensesCollapsed(!isFlexibleExpensesCollapsed)}>
+            <span style={{color: 'black'}}>{isFlexibleExpensesCollapsed ? '▶' : '▼'}</span>
+            <span className="text-sm font-bold ml-2">Total Flexible Expenses: {totalFlexibleExpenses}</span>
+          </div>
+          {!isFlexibleExpensesCollapsed && (
+            <ul className="list-disc ml-6">
+              {flexibleExpenseTransactions.map((transaction, index) => (
+                <li key={index}>{transaction.name}: {transaction.amount}</li>
+              ))}
+            </ul>
+          )}
         </div>
-        <p className="mb-6 text-gray-700 text-2xl font-bold bg-green-200 text-green-700 p-3 rounded-md shadow-lg rubik-doodle text-center">Profit $: {profit}</p>
-      </div>
-      <Link to="/update-income" className="mb-6 inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">Update Income</Link>
-      <div className="mb-20">
-        <Link
-          className="p-4 text-2xl bg-green-500 text-white rounded"
-          to="/updateBudget"
-        >
-          Update Budget
-        </Link>
+        {/* Savings Goal form */}
+        <div className="mb-6">
+          <label htmlFor="savingsGoal" className="block text-sm font-bold mb-2">Savings Goal: {submittedSavingsGoal}</label>
+          <form onSubmit={handleSubmit} className="flex">
+            <input 
+              type="number" 
+              id="savingsGoal" 
+              value={newSavingsGoal} 
+              onChange={(e) => setNewSavingsGoal(e.target.value)} 
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-2" 
+              placeholder="Enter your new savings goal" 
+            />
+            <button type="submit" className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">Submit</button>
+          </form>
+        </div>
+        {/* Placeholder for dropdown and category details - implement based on your specific needs */}
       </div>
     </div>
   );
+}
 
 export default OverviewPage;
