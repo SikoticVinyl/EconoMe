@@ -53,6 +53,7 @@ function MainPage({}) {
 						Go to Overview Page
 					</Link>
 				</div>
+				
 			</div>
 			<footer className="mt-auto w-full h-16 text-sm text-center bg-gray-200 bg-gradient-to-r from-green-400 to-blue-500 text-gray-900 ">
 				&copy; {new Date().getFullYear()} EconoMe
