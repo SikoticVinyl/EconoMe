@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-function userSettings() {
+function UserSettings() {
 	// Replace these with your actual data
 
 	return (
@@ -13,4 +13,4 @@ function userSettings() {
 		</div>
 	);
 }
-export default userSettings;
+export default UserSettings;

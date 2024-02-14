@@ -5,7 +5,7 @@ import { CREATE_BUDGET } from '../client-graphql/mutations/budgetMutations';
 import { CREATE_CATEGORY } from '../client-graphql/mutations/categoriesMutations';
 import { CREATE_TRANSACTION } from '../client-graphql/mutations/transactionMutations';
 
-function CreateBudgetPage() {
+function CreateBudget() {
   const navigate = useNavigate();
 
   // State hooks for managing form input values
@@ -66,7 +66,6 @@ const handleUserDecision = (createAnother) => {
     }
 };
 
-
   // Function to handle transaction creation
   const handleCreateTransaction = () => {
     createTransaction({
@@ -117,10 +116,10 @@ const handleUserDecision = (createAnother) => {
           <div className="mb-4 bg-white rounded shadow-md px-8 pt-6 pb-8">
             <h2 className="mb-4 text-xl font-bold">Create a Budget</h2>
             <input
-              type="number"
-              placeholder="Set your budget"
-              value={budget}
-              onChange={(e) => setBudget(e.target.value)}
+              type="text"
+              placeholder="Name your budget"
+              value={budgetName}
+              onChange={(e) => setBudgetName(e.target.value)}
               className="w-full mb-3 px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
             />
             <button onClick={handleCreateBudget} className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Create Budget</button>
@@ -252,4 +251,4 @@ const handleUserDecision = (createAnother) => {
   );
 }
 
-export default CreateBudgetPage;
+export default CreateBudget;
