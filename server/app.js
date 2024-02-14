@@ -15,6 +15,8 @@ async function startServer() {
 	const app = express();
 	app.use(helmet());
 
+	app.set('trust proxy', 1);
+
 	const allowedOrigins = [
 		'http://localhost:5173' // Main frontend domain
 	];
@@ -49,7 +51,7 @@ async function startServer() {
     });
 
 	console.log('Connecting to MongoDB...');
-	console.log('MONGODB_URI:', process.env.MONGODB_URI);
+	//console.log('MONGODB_URI:', process.env.MONGODB_URI);
 
 	mongoose
 		.connect(process.env.MONGODB_URI)
