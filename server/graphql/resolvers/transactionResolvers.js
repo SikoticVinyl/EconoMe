@@ -96,13 +96,13 @@ const transactionResolvers = {
 			if (!context.user) {
 				throw new AuthenticationError('Authentication required');
 			}
-			return await transactionServices.getTotalIncome(context.user.id);
+			return await transactionServices.getTotalIncome(context.user.id, 'income');
 		},
 		totalExpenses: async (_, __, context) => {
 			if (!context.user) {
 				throw new AuthenticationError('Authentication required');
 			}
-			return await transactionServices.getTotalExpenses(context.user._id);
+			return await transactionServices.getTotalExpenses(context.user._id, 'expense');
 		},
 		// Future Feature
 		//totalSavings: async (_, __, context) => {
