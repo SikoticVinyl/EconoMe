@@ -118,7 +118,22 @@ const transactionResolvers = {
 			return await transactionServices.getTotalFlexibleExpenses(
 				context.user._id
 			);
-		}
+		},
+		// Total income by category
+		totalIncomeByCategory: async (_, __, context) => {
+			if (!context.user) {
+			  throw new AuthenticationError('Authentication required');
+			}
+			return await transactionServices.getTotalIncomeByCategory(context.user.id);
+		  },
+	  
+		  // Total expenses by category
+		  totalExpensesByCategory: async (_, __, context) => {
+			if (!context.user) {
+			  throw new AuthenticationError('Authentication required');
+			}
+			return await transactionServices.getTotalExpensesByCategory(context.user.id);
+		  },
 	},
 	Mutation: {
 		createTransaction: async (

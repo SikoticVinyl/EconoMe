@@ -31,6 +31,52 @@ async function aggregateTransactions(userId, transactionType, flexible) {
 	return categories[0] ? categories[0].total : 0;
 }
 
+async function aggregateTransactionsByCategory(userId, transactionType) {
+    // Ensure transactionType is capitalized to match your schema enum values
+    const capitalizedTransactionType = transactionType.charAt(0).toUpperCase() + transactionType.slice(1);
+
+    const budgetIds = await fetchUserBudgetIds(userId);
+    
+    const aggregationPipeline = [
+        {
+            // Match categories that are in the user's budgets
+            $match: { 
+                budget: { $in: budgetIds } 
+            }
+        },
+        {
+            // Unwind the transactions array to process each transaction individually
+            $unwind: '$transactions'
+        },
+        {
+            // Further filter transactions by the specified type (Income or Expenses)
+            $match: {
+                'transactions.transactionType': capitalizedTransactionType
+            }
+        },
+        {
+            // Group by category ID and sum the amounts, also retaining the category name
+            $group: {
+                _id: '$_id',
+                totalAmount: { $sum: '$transactions.amount' },
+                name: { $first: '$name' }
+            }
+        },
+        {
+            // Project the desired output format
+            $project: {
+                _id: 0,
+                categoryId: '$_id',
+                name: 1,
+                totalAmount: 1
+            }
+        }
+    ];
+
+    const categoriesWithTransactions = await Category.aggregate(aggregationPipeline);
+    return categoriesWithTransactions;
+}
+
 // Exported service functions
 exports.getTotalIncome = async userId =>
 	aggregateTransactions(userId, 'income');
@@ -40,3 +86,9 @@ exports.getTotalSavings = async userId =>
 	aggregateTransactions(userId, 'savings');
 exports.getTotalFlexibleExpenses = async userId =>
 	aggregateTransactions(userId, 'expense', true);
+exports.getTotalIncomeByCategory = async (userId) => {
+		return aggregateTransactionsByCategory(userId, 'income');
+	};
+exports.getTotalExpensesByCategory = async (userId) => {
+		return aggregateTransactionsByCategory(userId, 'expense');
+	};
