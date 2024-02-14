@@ -76,14 +76,14 @@ function OverviewPage() {
 
 	return (
 		<div
-			className="flex flex-col h-screen justify-center items-center relative"
+			className="flex flex-col h-screen justify-center items-center relative overflow-hidden"
 			style={{
 				backgroundImage: `url(/Moneybg.jpg)`,
 				backgroundSize: '100% 100%'
 			}}
 		>
 			<div
-				className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+				className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 overflow-auto"
 				style={{
 					backgroundImage: `url(/Wood.jpg)`, // Change the image URL here
 					backgroundSize: '100% 100%'

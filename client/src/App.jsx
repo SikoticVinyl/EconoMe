@@ -13,33 +13,62 @@ import Footer from './Components/Footer';
 import './index.css';
 
 function App() {
-  const [darkMode, setDarkMode] = useState(false);
+	const [darkMode, setDarkMode] = useState(false);
 
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-    if (!darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  };
+	const toggleDarkMode = () => {
+		setDarkMode(!darkMode);
+		if (!darkMode) {
+			document.documentElement.classList.add('dark');
+		} else {
+			document.documentElement.classList.remove('dark');
+		}
+	};
 
-  return (
-    <Router>
-      <div className={darkMode ? 'dark' : ''}>
-        <Routes>
-          <Route path="/" element={<HomePage darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/overview-page" element={<><Header /><OverviewPage /><Footer /></>} />
-          <Route path="/create-budget" element={<CreateBudget />} />
-          <Route path="/user-profile-page" element={<UserProfilePage />} />
-          <Route path="/user-settings" element={<UserSettings />} />
-          <Route path="/detail-budget" element={<><Header /><DetailBudget /><Footer /></>} />
-        </Routes>
-      </div>
-    </Router>
-  );
+	return (
+		<Router>
+			<div className={darkMode ? 'dark' : ''}>
+				<Routes>
+					<Route
+						path="/"
+						element={
+							<HomePage darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+						}
+					/>
+					<Route path="/login" element={<Login />} />
+					<Route path="/signup" element={<Signup />} />
+					<Route
+						path="/overview-page"
+						element={
+							<div className="flex flex-col h-screen w-full overflow-hidden">
+								<div className="w-full overflow-hidden">
+									<Header />
+								</div>
+								<div className="flex-grow w-full overflow-hidden">
+									<OverviewPage />
+								</div>
+								<div className="w-full overflow-hidden">
+									<Footer />
+								</div>
+							</div>
+						}
+					/>
+					<Route path="/create-budget" element={<CreateBudget />} />
+					<Route path="/user-profile-page" element={<UserProfilePage />} />
+					<Route path="/user-settings" element={<UserSettings />} />
+					<Route
+						path="/detail-budget"
+						element={
+							<>
+								<Header />
+								<DetailBudget />
+								<Footer />
+							</>
+						}
+					/>
+				</Routes>
+			</div>
+		</Router>
+	);
 }
 
 export default App;
