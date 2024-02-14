@@ -86,7 +86,11 @@ async function startServer() {
 			}
 
 			return context;
-		}
+		},
+		formatError: (error) => {
+			console.error('GraphQL Error:', error);
+			return error;
+		  },
 	});
 
 	await server.start();

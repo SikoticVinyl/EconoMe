@@ -125,71 +125,82 @@ const transactionResolvers = {
 			_,
 			{ name, amount, transactionType, dueDate, payDate, flexible, categoryId },
 			context
-		) => {
+		  ) => {
+			console.log("Starting createTransaction with input:", { name, amount, transactionType, dueDate, payDate, flexible, categoryId });
+		
 			if (!context.user) {
-				throw new AuthenticationError('Authentication required');
+			  console.log("Authentication required error");
+			  throw new AuthenticationError('Authentication required');
 			}
+		
+			// Log the user ID for debugging
+			console.log("Authenticated user ID:", context.user.id);
+		
 			// Initialize a base transaction object with common fields
 			const transactionData = {
-				name,
-				amount,
-				transactionType,
-				user: context.user.id,
-				paid: false
+			  name,
+			  amount,
+			  transactionType,
+			  user: context.user.id,
+			  paid: false
 			};
-
+		
+			console.log("Initial transaction data:", transactionData);
+		
 			// Adjust fields based on the transaction type
 			if (transactionType === 'expense') {
-				transactionData.dueDate = dueDate;
-				transactionData.flexible = flexible ?? false;
+			  transactionData.dueDate = dueDate;
+			  transactionData.flexible = flexible ?? false;
 			} else if (transactionType === 'income') {
-				transactionData.payDate = payDate;
+			  transactionData.payDate = payDate;
 			}
-
+		
+			console.log("Adjusted transaction data based on type:", transactionData);
+		
 			try {
-				// Find the category and update it with the new transaction
-				const category = await Category.findById(categoryId);
-				if (
-					!category ||
-					(category.user && category.user.toString() !== context.user.id)
-				) {
-					throw new UserInputError('Category not found or access denied');
+			  // Find the category and update it with the new transaction
+			  const category = await Category.findById(categoryId);
+			  if (!category || (category.user && category.user.toString() !== context.user.id)) {
+				console.log("Category not found or access denied. Category ID:", categoryId);
+				throw new UserInputError('Category not found or access denied');
+			  }
+		
+			  console.log("Category found:", { id: category._id, name: category.name });
+		
+			  // Since transactions are embedded, we push the new transaction data directly
+			  category.transactions.push(transactionData);
+		
+			  // Log the category with the new transaction for debugging
+			  console.log("Category after adding transaction:", category);
+		
+			  // Save the updated category
+			  await category.save();
+		
+			  // MongoDB/Mongoose uses _id, but GraphQL expects an id field
+			  const createdTransaction = category.transactions[category.transactions.length - 1];
+			  
+			  console.log("Created transaction:", createdTransaction);
+		
+			  return {
+				id: createdTransaction._id.toString(), // Ensure conversion of _id to string
+				name: createdTransaction.name,
+				amount: createdTransaction.amount,
+				transactionType: createdTransaction.transactionType,
+				user: createdTransaction.user,
+				paid: createdTransaction.paid,
+				dueDate: createdTransaction.dueDate ? createdTransaction.dueDate.toISOString() : null,
+				payDate: createdTransaction.payDate ? createdTransaction.payDate.toISOString() : null,
+				flexible: createdTransaction.flexible,
+				category: {
+				  id: category._id.toString(),
+				  name: category.name
 				}
-
-				// Since transactions are embedded, we push the new transaction data directly
-				category.transactions.push(transactionData);
-
-				// Save the updated category
-				await category.save();
-
-				// MongoDB/Mongoose uses _id, but GraphQL expects an id field
-				// Manually constructing the transaction object to include an id field
-				const createdTransaction =
-					category.transactions[category.transactions.length - 1];
-				return {
-					id: createdTransaction._id.toString(), // Ensure conversion of _id to string
-					name: createdTransaction.name,
-					amount: createdTransaction.amount,
-					transactionType: createdTransaction.transactionType,
-					user: createdTransaction.user,
-					paid: createdTransaction.paid,
-					dueDate: createdTransaction.dueDate
-						? createdTransaction.dueDate.toISOString()
-						: null,
-					payDate: createdTransaction.payDate
-						? createdTransaction.payDate.toISOString()
-						: null,
-					flexible: createdTransaction.flexible,
-					category: {
-						id: category._id.toString(),
-						name: category.name
-					}
-				};
+			  };
 			} catch (error) {
-				console.error('Error creating transaction:', error);
-				throw new UserInputError('Failed to create transaction');
+			  console.error("Error creating transaction:", error);
+			  throw new UserInputError('Failed to create transaction', { error });
 			}
-		},
+		  },
 		updateTransaction: async (
 			_,
 			{ id, name, amount, dueDate, payDate, flexible, paid },

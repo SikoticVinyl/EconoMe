@@ -29,8 +29,8 @@ const transactionSchema = gql`
 			transactionType: String!
 			dueDate: String
 			payDate: String
-			flexible: Boolean!
-			paid: Boolean!
+			flexible: Boolean
+			paid: Boolean
 			categoryId: ID!
 		): Transaction
 		updateTransaction(
