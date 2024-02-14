@@ -8,7 +8,8 @@ export const CREATE_TRANSACTION = gql`
     $transactionType: String!
     $dueDate: String
     $payDate: String
-    $flexible: Boolean!
+    $flexible: Boolean
+    $paid: Boolean
     $categoryId: ID!
   ) {
     createTransaction(
@@ -18,20 +19,11 @@ export const CREATE_TRANSACTION = gql`
       dueDate: $dueDate
       payDate: $payDate
       flexible: $flexible
+      paid: $paid
       categoryId: $categoryId
     ) {
       id
       name
-      amount
-      transactionType
-      dueDate
-      payDate
-      flexible
-      paid
-      category {
-        id
-        name
-      }
     }
   }
 `;

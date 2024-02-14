@@ -120,7 +120,6 @@ const handleUserDecision = (createAnother) => {
     setDueDate('');
     setPayDate('');
     setIsFlexible(false);
-    setIsPaid(false);
     setSelectedCategoryId('');
     setShowTransactionConfirmation(false);
   };
