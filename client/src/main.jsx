@@ -11,9 +11,8 @@ const httpLink = createHttpLink({
 
 // Create a middleware to set the token in the request headers
 const authLink = setContext((_, { headers }) => {
-  // Get the token from secure storage (e.g., localStorage)
   const token = localStorage.getItem('token');
-
+  console.log("Authorization Token: ", token);
   // Return the headers with the token attached
   return {
     headers: {
