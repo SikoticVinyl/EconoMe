@@ -41,6 +41,13 @@ async function startServer() {
 
 	app.use(express.json());
 
+	 app.use((req, res, next) => {
+        console.log('Incoming request:', req.path);
+        console.log('Headers:', req.headers);
+        console.log('Body:', req.body); // Body will be parsed JSON due to express.json() middleware
+        next();
+    });
+
 	console.log('Connecting to MongoDB...');
 	console.log('MONGODB_URI:', process.env.MONGODB_URI);
 
