@@ -1,19 +1,18 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './Components/Login';
 import Signup from './Components/Signup';
 import HomePage from './Components/HomePage';
+import OverviewPage from './Components/OverviewPage';
+import CreateBudget from './Components/CreateBudget';
+import UserProfilePage from './Components/UserProfilePage';
+import UserSettings from './Components/UserSettings';
+import DetailBudget from './Components/DetailBudget';
+import Header from './Components/Header';
+import Footer from './Components/Footer';
 import './index.css';
-import OverviewPage from './Components/overviewpage';
-import CreateBudget from './Components/createBudget';
-import UserProfilepage from './Components/userProfilepage';
-import userSettings from './Components/usersettings';
-import detailBudget from './Components/detailBudget';
-import Header from './components/header';
-import Footer from './components/footer';
 
 function App() {
-
   const [darkMode, setDarkMode] = useState(false);
 
   const toggleDarkMode = () => {
@@ -25,36 +24,20 @@ function App() {
     }
   };
 
-<div className="min-h-screen bg-blue-100 flex items-center justify-center">
-		<h1 className="text-4xl font-bold text-blue-900">App</h1>
-	</div>;
   return (
     <Router>
-      <Routes>
-        <Route
-          path="/"
-          element={<HomePage darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}
-        />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/overviewpage" element={
-					<div>
-						<Header />
-						<OverviewPage />
-						<Footer />
-					</div>
-				} />
-				<Route path="/createBudget" element={<CreateBudget />} />
-				<Route path="/userProfilepage" element={<UserProfilepage />} />
-				<Route path="/userSettings" element={<userSettings />} />
-				<Route path="/detailBudget" element={
-					<div>
-						<Header />
-						<detailBudget />
-						<Footer />
-					</div>
-				} />
-      </Routes>
+      <div className={darkMode ? 'dark' : ''}>
+        <Routes>
+          <Route path="/" element={<HomePage darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/overview-page" element={<><Header /><OverviewPage /><Footer /></>} />
+          <Route path="/create-budget" element={<CreateBudget />} />
+          <Route path="/user-profile-page" element={<UserProfilePage />} />
+          <Route path="/user-settings" element={<UserSettings />} />
+          <Route path="/detail-budget" element={<><Header /><DetailBudget /><Footer /></>} />
+        </Routes>
+      </div>
     </Router>
   );
 }

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 // const userImage = {userImage}
 
-function UserProfilepage() {
+function UserProfilePage() {
 	// Replace these with your actual data
 
 	return (
@@ -40,4 +40,4 @@ function UserProfilepage() {
 		</div>
 	);
 }
-export default UserProfilepage;
+export default UserProfilePage;
