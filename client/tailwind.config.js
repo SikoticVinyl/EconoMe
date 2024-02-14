@@ -6,7 +6,6 @@ export default {
             screens: {
                 '3xl': '1920px',
 				'lg-xl': '1152px',
-                '3xl': '1920px',
             },
             animation: {
                 slowping: 'ping 10s cubic-bezier(0, 0, 0.2, 1) infinite'

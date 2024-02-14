@@ -15,16 +15,16 @@ import UpdateFooter from './Components/UpdateFooter';
 import './index.css';
 
 function App() {
-	const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
 
-	const toggleDarkMode = () => {
-		setDarkMode(!darkMode);
-		if (!darkMode) {
-			document.documentElement.classList.add('dark');
-		} else {
-			document.documentElement.classList.remove('dark');
-		}
-	};
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+    if (!darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  };
 
   return (
     <Router>
@@ -38,6 +38,7 @@ function App() {
           <Route path="/user-profile-page" element={<UserProfilePage />} />
           <Route path="/user-settings" element={<UserSettings />} />
           <Route path="/detail-budget" element={<><Header /><DetailBudget /><Footer /></>} />
+          <Route path="/update-budget" element={<><Header /><UpdateBudget/><UpdateFooter /></>} />
         </Routes>
       </div>
     </Router>
