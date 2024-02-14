@@ -10,7 +10,7 @@ const Header = () => {
 
   return (
     <header
-      className="flex flex-col items-stretch bg-cover bg-center"
+      className="flex flex-col items-stretch bg-cover bg-center w-full md:w-auto"
       style={{
         backgroundImage: `url(/Moneybg.jpg)`,
         backgroundColor: 'rgba(255, 255, 255, 0.5)', // semi-transparent white
