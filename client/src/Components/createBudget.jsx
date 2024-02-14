@@ -28,20 +28,39 @@ function CreateBudget() {
   const [step, setStep] = useState(1);
 
   // Mutation hooks
-  const [createBudget] = useMutation(CREATE_BUDGET);
+  const [createBudget] = useMutation(CREATE_BUDGET, {
+    onCompleted: (data) => {
+      console.log("Budget creation response:", data);
+      const budgetId = data.createBudget.id; // Ensure this matches the actual response structure
+      console.log("Created budget ID:", budgetId);
+      setCurrentBudgetId(budgetId);
+      localStorage.setItem('currentBudgetId', budgetId);
+      setStep(2); // Move to the next step or perform other actions as needed
+    },
+    onError: (error) => {
+      console.error('Error creating budget:', error);
+    },
+  });
   const [createCategory] = useMutation(CREATE_CATEGORY);
   const [createTransaction] = useMutation(CREATE_TRANSACTION);
 
 // Function for budget creation
 const handleCreateBudget = () => {
-    createBudget({ variables: { name: budgetName } })
-      .then(response => {
-        const budgetId = response.data.createBudget.id;
-        setCurrentBudgetId(budgetId);
-        setStep(2); // Proceed to category creation
-      })
-      .catch(error => console.error('Error creating budget:', error));
-  };
+  console.log("Attempting to create budget with name: ", budgetName);
+  
+  createBudget({ variables: { name: budgetName } })
+    .then(response => {
+      console.log("Budget created successfully: ", response.data.createBudget);
+      
+      const budgetId = response.data.createBudget.id;
+      setCurrentBudgetId(budgetId);
+      setStep(2); // Proceed to category creation
+    })
+    .catch(error => {
+      console.error('Error creating budget:', error);
+      console.log("Variables sent on error: ", { name: budgetName });
+    });
+};
   
 // Function to handle category creation
 const handleCreateCategory = () => {
