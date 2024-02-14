@@ -13,6 +13,12 @@ const transactionSchema = gql`
 		category: Category!
 	}
 
+	type CategoryTotal {
+		categoryId: ID!
+		name: String!
+		totalAmount: Float!
+	}
+
 	extend type Query {
 		transaction(id: ID!): Transaction
 		transactions: [Transaction]
@@ -20,6 +26,8 @@ const transactionSchema = gql`
 		totalExpenses: Float!
 		totalSavings: Float!
 		totalFlexibleExpenses: Float!
+		totalIncomeByCategory: [CategoryTotal]!
+		totalExpensesByCategory: [CategoryTotal]!
 	}
 
 	extend type Mutation {
