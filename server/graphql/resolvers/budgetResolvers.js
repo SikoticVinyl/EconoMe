@@ -37,29 +37,28 @@ const budgetResolvers = {
 	Mutation: {
 		createBudget: async (_, { name }, context) => {
 			if (!context.user) {
-				console.log('Authentication required');
-				throw new AuthenticationError('Authentication required');
+			  console.log('Authentication required');
+			  throw new AuthenticationError('Authentication required');
 			}
-
-			console.log(`Creating a new budget for user: ${context.user.id}`);
-
+		
 			const newBudget = new Budget({
-				user: context.user.id,
-				name
+			  user: context.user.id,
+			  name,
 			});
-
+		
 			try {
-				await newBudget.save();
-				console.log(
-					`Budget created successfully: ${JSON.stringify(newBudget)}`
-				);
-				return newBudget;
+			  const savedBudget = await newBudget.save();
+			  console.log(`Budget created successfully: ${JSON.stringify(savedBudget)}`);
+			  // Convert _id to string and ensure it is returned as `id` to match GraphQL expectations
+			  return {
+				...savedBudget.toObject(),
+				id: savedBudget._id.toString(),
+			  };
 			} catch (error) {
-				console.error('Error creating budget:', error);
-				throw new UserInputError(error.message);
+			  console.error('Error creating budget:', error);
+			  throw new UserInputError(error.message);
 			}
-		},
-
+		  },
 		updateBudget: async (_, { id, name }, context) => {
 			// Ensure the user is authenticated
 			if (!context.user) {

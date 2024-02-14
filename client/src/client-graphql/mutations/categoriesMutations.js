@@ -6,11 +6,10 @@ export const CREATE_CATEGORY = gql`
     createCategory(name: $name, flexB: $flexB, budgetId: $budgetId) {
       id
       name
-      flexB
-      budget
     }
   }
 `;
+
 
 // Mutation to update a category
 export const UPDATE_CATEGORY = gql`

@@ -1,6 +1,5 @@
 import { gql } from '@apollo/client';
 
-// Mutation to create a transaction
 export const CREATE_TRANSACTION = gql`
   mutation CreateTransaction(
     $name: String!
@@ -8,7 +7,8 @@ export const CREATE_TRANSACTION = gql`
     $transactionType: String!
     $dueDate: String
     $payDate: String
-    $flexible: Boolean!
+    $flexible: Boolean
+    $paid: Boolean
     $categoryId: ID!
   ) {
     createTransaction(
@@ -18,20 +18,10 @@ export const CREATE_TRANSACTION = gql`
       dueDate: $dueDate
       payDate: $payDate
       flexible: $flexible
+      paid: $paid
       categoryId: $categoryId
     ) {
-      id
-      name
-      amount
-      transactionType
-      dueDate
-      payDate
-      flexible
-      paid
-      category {
-        id
-        name
-      }
+      id  # Request only the ID to confirm creation
     }
   }
 `;

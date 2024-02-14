@@ -60,3 +60,25 @@ export const GET_TOTAL_FLEXIBLE_EXPENSES = gql`
     totalFlexibleExpenses
   }
 `;
+
+// Query to fetch total expenses by category
+export const GET_TOTAL_EXPENSES_BY_CATEGORY = gql`
+  query GetTotalExpensesByCategory {
+    totalExpensesByCategory {
+      categoryId
+      name
+      totalAmount
+    }
+  }
+`;
+
+// Query to fetch total income by category
+export const GET_TOTAL_INCOME_BY_CATEGORY = gql`
+  query GetTotalIncomeByCategory {
+    totalIncomeByCategory {
+      categoryId
+      name
+      totalAmount
+    }
+  }
+`;

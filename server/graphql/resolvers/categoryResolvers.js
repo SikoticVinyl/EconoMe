@@ -49,28 +49,32 @@ const categoryResolvers = {
 	Mutation: {
 		createCategory: async (_, { name, flexB, budgetId }, context) => {
 			if (!context.user) {
-				throw new AuthenticationError('Authentication required');
+			  throw new AuthenticationError('Authentication required');
 			}
-
+		  
 			// Ensure the budget exists and belongs to the user
 			const budget = await Budget.findById(budgetId);
 			if (!budget || budget.user.toString() !== context.user.id) {
-				throw new UserInputError('Budget not found or access denied');
+			  throw new UserInputError('Budget not found or access denied');
 			}
-
+		  
 			const newCategory = new Category({
-				name,
-				flexB,
-				budget: budgetId
+			  name,
+			  flexB,
+			  budget: budgetId
 			});
-
+		  
 			try {
-				await newCategory.save();
-				return newCategory;
+			  const savedCategory = await newCategory.save();
+			  return {
+				...savedCategory.toObject(),
+				id: savedCategory._id.toString(),
+			  };
 			} catch (error) {
-				throw new UserInputError(error.message);
+			  console.error('Error creating category:', error);
+			  throw new UserInputError(error.message);
 			}
-		},
+		  },
 		updateCategory: async (_, { id, name, flexB }, context) => {
 			if (!context.user) {
 				throw new AuthenticationError('Authentication required');
