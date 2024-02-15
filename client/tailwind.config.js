@@ -8,7 +8,8 @@ export default {
 				'lg-xl': '1152px',
             },
             animation: {
-                slowping: 'ping 10s cubic-bezier(0, 0, 0.2, 1) infinite'
+                slowping: 'ping 10s cubic-bezier(0, 0, 0.2, 1) infinite',
+                'wave': 'wave 2s ease-in-out infinite',
             },
             fontFamily: {
                 'nebula': ['Nabla', 'sans-serif'],
