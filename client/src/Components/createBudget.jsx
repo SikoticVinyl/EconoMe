@@ -173,51 +173,55 @@ function CreateBudget() {
 
 				{/* Category Creation Step */}
 				{step === 2 && (
-			<div className="w-full max-w-xs">
-      <div className="mb-4 bg-white rounded shadow-md px-8 pt-6 pb-8">
-        <h2 className="mb-4 text-2xl font-bold font-rubik-doodle ">
-          Create Category
-        </h2>
-        <input
-          type="text"
-          placeholder={categoryName ? '' : 'Category name'}
-          value={categoryName}
-          onChange={e => setCategoryName(e.target.value)}
-          onFocus={e => (e.target.placeholder = '')}
-          onBlur={e => (e.target.placeholder = 'Category name')}
-          className="w-full mb-3 px-3 py-2 leading-tight text-gray-700 border-2 rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-        />
-<label className="inline-flex items-start">
-  <input
-    type="checkbox"
-    checked={isFlexible}
-    onChange={e => setIsFlexible(e.target.checked)}
-    className="form-checkbox h-5 w-5 text-blue-600 mt-1"
-  />
-  <div className="ml-2">
-    <span className="text-gray-700">Flexible</span>
-    <span className="text-xs text-gray-500 block">"Groceries, Subscriptions, Shopping, etc"</span>
-  </div>
-</label>
-        <div className="relative">
-          <div className="absolute top-0 right-0 flex items-center justify-center ">
-            <div className="h-3 w-3 rounded-full bg-red-600 opacity-75"></div>
-          </div>
-          <button
-            onClick={handleCreateCategory}
-            className="w-full text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline bg-gradient-to-r from-blue-500 to-green-500 hover:from-pink-500 hover:to-yellow-500 transform transition duration-300 ease-in-out hover:scale-105 relative z-0"
-          >
-            Create Category
-          </button>
-        </div>
-      </div>
-    </div>
+					<div className="w-full max-w-xs">
+						<div className="mb-4 bg-white rounded shadow-md px-8 pt-6 pb-8">
+							<h2 className="mb-4 text-2xl font-bold font-rubik-doodle ">
+								Create Category
+							</h2>
+							<input
+								type="text"
+								placeholder={categoryName ? '' : 'Category name'}
+								value={categoryName}
+								onChange={e => setCategoryName(e.target.value)}
+								onFocus={e => (e.target.placeholder = '')}
+								onBlur={e => (e.target.placeholder = 'Category name')}
+								className="w-full mb-3 px-3 py-2 leading-tight text-gray-700 border-2 rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+							/>
+							<label className="inline-flex items-start">
+								<input
+									type="checkbox"
+									checked={isFlexible}
+									onChange={e => setIsFlexible(e.target.checked)}
+									className="form-checkbox h-5 w-5 text-blue-600 mt-1"
+								/>
+								<div className="ml-2">
+									<span className="text-gray-700">Flexible</span>
+									<span className="text-xs text-gray-500 block font-bold">
+										"Groceries, Subscriptions, Shopping, etc"
+									</span>
+								</div>
+							</label>
+							<div className="relative">
+								<div className="absolute top-0 right-0 flex items-center justify-center ">
+									<div className="h-3 w-3 rounded-full bg-red-600 opacity-75"></div>
+								</div>
+								<button
+									onClick={handleCreateCategory}
+									className="w-full text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline bg-gradient-to-r from-blue-500 to-green-500 hover:from-pink-500 hover:to-yellow-500 transform transition duration-300 ease-in-out hover:scale-105 relative z-0"
+								>
+									Create Category
+								</button>
+							</div>
+						</div>
+					</div>
 				)}
 
 				{/* Transaction Creation Step */}
 				{step === 3 && (
 					<div className="bg-white rounded shadow-md px-8 pt-6 pb-8 ">
-						<h2 className="mb-4 text-3xl font-bold font-rubik-doodle">Add Transaction</h2>
+						<h2 className="mb-4 text-3xl font-bold font-rubik-doodle">
+							Add Transaction
+						</h2>
 						<input
 							type="text"
 							placeholder="Transaction Name"
@@ -245,28 +249,32 @@ function CreateBudget() {
 
 						{transactionType === 'Income' && (
 							<div>
-              <p className="text-sm text-gray-500 font-bold">When is Payday?</p>
-              <input
-                type="date"
-                placeholder="Pay Date"
-                value={payDate}
-                onChange={e => setPayDate(e.target.value)}
-                className="w-full mb-3 px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-              />
-            </div>
+								<p className="text-sm text-gray-500 font-bold">
+									When is Payday?
+								</p>
+								<input
+									type="date"
+									placeholder="Pay Date"
+									value={payDate}
+									onChange={e => setPayDate(e.target.value)}
+									className="w-full mb-3 px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+								/>
+							</div>
 						)}
 						{transactionType === 'Expense' && (
 							<>
 								<div>
-  <p className="text-sm text-gray-500 font-bold">Due date of the Transaction.</p>
-  <input
-    type="date"
-    placeholder="Due Date"
-    value={dueDate}
-    onChange={e => setDueDate(e.target.value)}
-    className="w-full mb-3 px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-  />
-</div>
+									<p className="text-sm text-gray-500 font-bold">
+										Due date of the Transaction.
+									</p>
+									<input
+										type="date"
+										placeholder="Due Date"
+										value={dueDate}
+										onChange={e => setDueDate(e.target.value)}
+										className="w-full mb-3 px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+									/>
+								</div>
 								<div className="flex items-center mb-3">
 									<input
 										type="checkbox"
@@ -295,7 +303,7 @@ function CreateBudget() {
 
 						<button
 							onClick={handleCreateTransaction}
-							className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+							className="w-full text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline bg-gradient-to-r from-blue-500 to-green-500 hover:from-pink-500 hover:to-yellow-500 transform transition duration-300 ease-in-out hover:scale-105 relative z-0"
 						>
 							Add Transaction
 						</button>
@@ -303,42 +311,52 @@ function CreateBudget() {
 				)}
 
 				{/* Prompt for creating another category */}
-        {showCreateAnotherCategory && (
-  <div className="text-center">
-    <div className="inline-block p-4 mb-4 rounded shadow-md" style={{backgroundImage: `url(/alpopupcard.jpg)`}}>
-      <p className="text-white">Category created successfully. Do you want to create another?</p>
-    </div>
-    <button 
-      onClick={() => handleUserDecision(true)}
-      className="px-4 py-2 mr-2 text-white font-bold rounded bg-gradient-to-r from-blue-500 to-green-500 hover:from-pink-500 hover:to-yellow-500 transform transition duration-300 ease-in-out hover:scale-105"
-    >
-      Yes
-    </button>
-    <button 
-      onClick={() => handleUserDecision(false)}
-      className="px-4 py-2 text-white font-bold rounded bg-gradient-to-r from-blue-500 to-green-500 hover:from-pink-500 hover:to-yellow-500 transform transition duration-300 ease-in-out hover:scale-105"
-    >
-      No
-    </button>
-  </div>
-)}
+				{showCreateAnotherCategory && (
+					<div className="text-center">
+						<div
+							className="inline-block p-4 mb-4 rounded shadow-md"
+							style={{ backgroundImage: `url(/alpopupcard.jpg)` }}
+						>
+							<p className="text-white">
+								Category created successfully. Do you want to create another?
+							</p>
+						</div>
+						<button
+							onClick={() => handleUserDecision(true)}
+							className="px-4 py-2 mr-2 text-white font-bold rounded bg-gradient-to-r from-blue-500 to-green-500 hover:from-pink-500 hover:to-yellow-500 transform transition duration-300 ease-in-out hover:scale-105"
+						>
+							Yes
+						</button>
+						<button
+							onClick={() => handleUserDecision(false)}
+							className="px-4 py-2 text-white font-bold rounded bg-gradient-to-r from-blue-500 to-green-500 hover:from-pink-500 hover:to-yellow-500 transform transition duration-300 ease-in-out hover:scale-105"
+						>
+							No
+						</button>
+					</div>
+				)}
 
 				{/* Prompt for creating another transaction or finishing */}
 				{showTransactionConfirmation && (
 					<div className="text-center">
-						<p>
-							Transaction added successfully. Would you like to add another
-							transaction?
-						</p>
+						<div
+							className="inline-block p-4 mb-4 rounded shadow-md"
+							style={{ backgroundImage: `url(/alpopupcard.jpg)` }}
+						>
+							<p className="text-white">
+								Transaction added successfully. Would you like to add another
+								transaction?
+							</p>
+						</div>
 						<button
 							onClick={() => handleTransactionDecision(true)}
-							className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mx-2"
+							className="px-4 py-2 mr-2 text-white font-bold rounded bg-gradient-to-r from-blue-500 to-green-500 hover:from-pink-500 hover:to-yellow-500 transform transition duration-300 ease-in-out hover:scale-105"
 						>
 							Yes, add another
 						</button>
 						<button
 							onClick={() => handleTransactionDecision(false)}
-							className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mx-2"
+							className="px-4 py-2 text-white font-bold rounded bg-gradient-to-r from-blue-500 to-green-500 hover:from-pink-500 hover:to-yellow-500 transform transition duration-300 ease-in-out hover:scale-105"
 						>
 							No, I'm done
 						</button>
