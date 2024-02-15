@@ -2,7 +2,7 @@
 
 ## Description
 
-A budgeting app to make budgetting more dynamic and user friendly with Tracking expenses, income management, budget categories
+Welcome to EconoMe! Our goal is to provide an easy way for a user to view and interact with their budgeting needs. A user can sign up for an account, log in to the account, and create / view a budget that pertains to their needs! Once a budget is created, categories can be added to that budget (cost of living, groceries, automotive, etc.), and transactions (gas, takeout, Netflix) can be added to those categories. This provides for a very easy and interactive way to visualize your money.
 
 ## Table of Contents
 
@@ -14,7 +14,7 @@ A budgeting app to make budgetting more dynamic and user friendly with Tracking 
 
 ## Visuals
 
-Coming soon.....
+![Preview Image](./client/public/preview.png)
 
 ## Installation
 
@@ -23,11 +23,11 @@ npm run dev
 
 ## Usage
 
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+When opened, you're presented with a login/signup page. After logging in/signing up, you can update or create a budget. Within that budget, you can make multiple categories (which can be flexible or not), and transactions to go in those categories.
 
 ## Support
 
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+Contact any of the developers for support!
 
 ## Authors/Collaborators and acknowledgment
 
