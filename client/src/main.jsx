@@ -6,7 +6,8 @@ import App from './App.jsx';
 import './index.css';
 
 const httpLink = createHttpLink({
-  uri: 'https://economedbd.onrender.com/graphql',
+  uri: 'https://economedbd.onrender.com/graphql' //Deployment URI
+  //uri: 'http://localhost:3001/graphql' // Development URI for testing backend
 });
 
 // Create a middleware to set the token in the request headers

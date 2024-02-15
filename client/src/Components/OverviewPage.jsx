@@ -107,9 +107,8 @@ function OverviewPage() {
       }}
     >
       <div
-        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+        className="bg-[#5549ad] bg-opacity-90 text-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
         style={{
-          backgroundImage: `url(/Wood.jpg)`, // Change the image URL here
           backgroundSize: '100% 100%'
         }}
       >

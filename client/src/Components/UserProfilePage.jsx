@@ -1,12 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-// import userImage from './';
+// import userImage from '../assets/userImage';
 
-function DetailBudget() {
+// const userImage = {userImage}
+
+function UserProfilePage() {
 	// Replace these with your actual data
 
 	return (
 		<div>
+			{/* <img src={userImage} alt="userImage" />; */}
+
 			<div>
 				<h1> First Last</h1>
 			</div>
@@ -32,9 +36,9 @@ function DetailBudget() {
 					</button>{' '}
 				</h2>
 			</div>
-			<Link to="/updateBudget">Back to Update Budget</Link>
+			<Link to="/usersettings">User Settings</Link>
 		</div>
 	);
 }
-export default DetailBudget;
-//Comment so file name change updates
+export default UserProfilePage;
+//comment to update file name
