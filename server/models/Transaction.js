@@ -18,27 +18,27 @@ const transactionSchema = new mongoose.Schema({
 		type: Date,
 		required: true,
 		required: function () {
-			return this.transactionType === 'Expense';
+			return this.transactionType === 'expense';
 		} // Only required for expenses
 	},
 	payDate: {
 		type: Date,
 		required: true,
 		required: function () {
-			return this.transactionType === 'Income';
+			return this.transactionType === 'income';
 		} // Only required for income
 	},
 	flexible: {
 		type: Boolean,
 		required: function () {
-			return this.transactionType === 'Expense';
+			return this.transactionType === 'expense';
 		}
 	},
 	paid: {
 		type: Boolean,
 		default: false,
 		required: function () {
-			return this.transactionType === 'Expense';
+			return this.transactionType === 'expense';
 		}
 	}
 });
